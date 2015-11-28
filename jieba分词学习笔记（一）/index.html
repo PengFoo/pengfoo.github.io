@@ -1,0 +1,773 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="full-stack就是实验室项目多的意思" />
+
+
+
+
+  <meta name="keywords" content="jieba,nlp,分词,自然语言处理," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;lt;!-- toc --&amp;gt;
+
+&amp;#x5E8F;
+jieba&amp;#x5206;&amp;#x8BCD;&amp;#x7684;&amp;#x57FA;&amp;#x672C;&amp;#x601D;&amp;#x8DEF;
+&amp;#x8BCD;&amp;#x5178;&amp;#x7684;&amp;#x52A0;&amp;#x8F7D;
+&amp;#x8BED;&amp;#x6599;&amp;#x5E93;&amp;#x548C;&amp;#x8BCD;&amp;#x5178;
+&amp;#x5BF9;&amp;#x5B57;&amp;#x5178;&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jieba分词学习笔记（一）">
+<meta property="og:url" content="http://yoursite.com/jieba分词学习笔记（一）/index.html">
+<meta property="og:site_name" content="Peng Foo">
+<meta property="og:description" content="&amp;lt;!-- toc --&amp;gt;
+
+&amp;#x5E8F;
+jieba&amp;#x5206;&amp;#x8BCD;&amp;#x7684;&amp;#x57FA;&amp;#x672C;&amp;#x601D;&amp;#x8DEF;
+&amp;#x8BCD;&amp;#x5178;&amp;#x7684;&amp;#x52A0;&amp;#x8F7D;
+&amp;#x8BED;&amp;#x6599;&amp;#x5E93;&amp;#x548C;&amp;#x8BCD;&amp;#x5178;
+&amp;#x5BF9;&amp;#x5B57;&amp;#x5178;&amp;">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/2012112521092438.png">
+<meta property="og:updated_time" content="2015-11-28T12:59:43.203Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jieba分词学习笔记（一）">
+<meta name="twitter:description" content="&amp;lt;!-- toc --&amp;gt;
+
+&amp;#x5E8F;
+jieba&amp;#x5206;&amp;#x8BCD;&amp;#x7684;&amp;#x57FA;&amp;#x672C;&amp;#x601D;&amp;#x8DEF;
+&amp;#x8BCD;&amp;#x5178;&amp;#x7684;&amp;#x52A0;&amp;#x8F7D;
+&amp;#x8BED;&amp;#x6599;&amp;#x5E93;&amp;#x548C;&amp;#x8BCD;&amp;#x5178;
+&amp;#x5BF9;&amp;#x5B57;&amp;#x5178;&amp;">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> jieba分词学习笔记（一） | Peng Foo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Peng Foo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                jieba分词学习笔记（一）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-11-27T22:47:00+08:00" content="2015-11-27">
+              2015-11-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/jieba分词学习笔记（一）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="jieba分词学习笔记（一）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><!-- toc -->
+<ul>
+<li><a href="#&#x5E8F;">&#x5E8F;</a></li>
+<li><a href="#jieba&#x5206;&#x8BCD;&#x7684;&#x57FA;&#x672C;&#x601D;&#x8DEF;">jieba&#x5206;&#x8BCD;&#x7684;&#x57FA;&#x672C;&#x601D;&#x8DEF;</a></li>
+<li><a href="#&#x8BCD;&#x5178;&#x7684;&#x52A0;&#x8F7D;">&#x8BCD;&#x5178;&#x7684;&#x52A0;&#x8F7D;</a><ul>
+<li><a href="#&#x8BED;&#x6599;&#x5E93;&#x548C;&#x8BCD;&#x5178;">&#x8BED;&#x6599;&#x5E93;&#x548C;&#x8BCD;&#x5178;</a></li>
+<li><a href="#&#x5BF9;&#x5B57;&#x5178;&#x7684;&#x5904;&#x7406;">&#x5BF9;&#x5B57;&#x5178;&#x7684;&#x5904;&#x7406;</a><ul>
+<li><a href="#trie&#x6811;">trie&#x6811;</a><br>~ <a href="#trie&#x6811;&#x7B80;&#x4ECB;">trie&#x6811;&#x7B80;&#x4ECB;</a><br>~ <a href="#jieba&#x5206;&#x8BCD;&#x7684;trie&#x6811;">jieba&#x5206;&#x8BCD;&#x7684;trie&#x6811;</a><br>~ <a href="#&#x4F7F;&#x7528;trie&#x6811;&#x7684;&#x95EE;&#x9898;">&#x4F7F;&#x7528;trie&#x6811;&#x7684;&#x95EE;&#x9898;</a></li>
+<li><a href="#&#x524D;&#x7F00;&#x6570;&#x7EC4;">&#x524D;&#x7F00;&#x6570;&#x7EC4;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+<hr>
+<h1 id="&#x5E8F;">&#x5E8F;</h1><p>&#x4E2D;&#x79D1;&#x9662;&#x7684;ICTCLAS&#xFF0C;&#x54C8;&#x5DE5;&#x5927;&#x7684;ltp&#xFF0C;&#x4E1C;&#x5317;&#x5927;&#x5B66;&#x7684;NIU Parser&#x662F;&#x5B66;&#x672F;&#x754C;&#x8457;&#x540D;&#x7684;&#x5206;&#x8BCD;&#x5668;&#xFF0C;&#x6211;&#x66FE;&#x6D45;&#x663E;&#x8BFB;&#x8FC7;&#x4E00;&#x4E9B;ICTCLAS&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x7136;&#x800C;&#x5E76;&#x4E0D;&#x90A3;&#x4E48;&#x597D;&#x8BFB;&#x3002;jieba&#x5206;&#x8BCD;&#x662F;python&#x5199;&#x6210;&#x7684;&#x4E00;&#x4E2A;&#x7B97;&#x662F;&#x5DE5;&#x4E1A;&#x754C;&#x7684;&#x5206;&#x8BCD;&#x5F00;&#x6E90;&#x5E93;&#xFF0C;&#x5176;github&#x5730;&#x5740;&#x4E3A;&#xFF1A;<a href="https://github.com/fxsjy/jieba" target="_blank" rel="external">https://github.com/fxsjy/jieba</a></p>
+<p>jieba&#x5206;&#x8BCD;&#x867D;&#x7136;&#x6548;&#x679C;&#x4E0A;&#x4E0D;&#x5982;ICTCLAS&#x548C;ltp&#xFF0C;&#x4F46;&#x662F;&#x80DC;&#x5728;python&#x7F16;&#x5199;&#xFF0C;&#x4EE3;&#x7801;&#x6E05;&#x6670;&#xFF0C;&#x6269;&#x5C55;&#x6027;&#x597D;&#xFF0C;&#x5BF9;jieba&#x6709;&#x6539;&#x8FDB;&#x7684;&#x60F3;&#x6CD5;&#x53EF;&#x4EE5;&#x5F88;&#x5BB9;&#x6613;&#x7684;&#x81EA;&#x5DF1;&#x5199;&#x4EE3;&#x7801;&#x8FDB;&#x884C;&#x9B54;&#x6539;&#x3002;&#x6BD5;&#x7ADF;&#x8FD9;&#x6837;&#x8BF4;&#x597D;&#x50CF;&#x81EA;&#x5DF1;&#x5C31;&#x6709;&#x80FD;&#x529B;&#x6539;&#x8FDB;jieba&#x5206;&#x8BCD;&#x4E00;&#x6837;_(:&#x437;&#x300D;&#x2220;)_</p>
+<blockquote>
+<p>&#x7F51;&#x4E0A;&#x8BF8;&#x591A;&#x5173;&#x4E8E;jieba&#x5206;&#x8BCD;&#x7684;&#x5206;&#x6790;&#xFF0C;&#x591A;&#x5DF2;&#x8FC7;&#x65F6;&#xFF0C;&#x66FE;&#x7ECF;&#x5206;&#x6790;jieba&#x5206;&#x8BCD;&#x91C7;&#x7528;trie&#x6811;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x4E91;&#x4E91;&#x7684;&#x6587;&#x7AE0;&#x90FD;&#x5DF2;&#x7ECF;&#x8FC7;&#x65F6;&#xFF0C;&#x73B0;&#x5728;&#x7684;jieba&#x5206;&#x8BCD;&#x5DF2;&#x7ECF;&#x653E;&#x5F03;trie&#x6811;&#xFF0C;&#x91C7;&#x7528;&#x524D;&#x7F00;&#x6570;&#x7EC4;&#x5B57;&#x5178;&#x7684;&#x65B9;&#x5F0F;&#x5B58;&#x50A8;&#x8BCD;&#x5178;&#x3002;</p>
+</blockquote>
+<p>&#x672C;&#x6587;&#x5206;&#x6790;&#x7684;jieba&#x5206;&#x8BCD;&#x57FA;&#x4E8E;<code>2015&#x5E74;7&#x6708;</code>&#x5DE6;&#x53F3;&#x7684;&#x4EE3;&#x7801;&#x8FDB;&#x884C;&#xFF0C;&#x65E5;&#x540E;jieba&#x82E5;&#x66F4;&#x65B0;&#xFF0C;&#x770B;&#x7F18;&#x5206;&#x66F4;&#x65B0;&#x8FD9;&#x4E00;&#x7CFB;&#x5217;&#x6587;&#x7AE0;_(:&#x437;&#x300D;&#x2220;)_</p>
+<h1 id="jieba&#x5206;&#x8BCD;&#x7684;&#x57FA;&#x672C;&#x601D;&#x8DEF;">jieba&#x5206;&#x8BCD;&#x7684;&#x57FA;&#x672C;&#x601D;&#x8DEF;</h1><p>jieba&#x5206;&#x8BCD;&#x5BF9;&#x5DF2;&#x6536;&#x5F55;&#x8BCD;&#x548C;&#x672A;&#x6536;&#x5F55;&#x8BCD;&#x90FD;&#x6709;&#x76F8;&#x5E94;&#x7684;&#x7B97;&#x6CD5;&#x8FDB;&#x884C;&#x5904;&#x7406;&#xFF0C;&#x5176;&#x5904;&#x7406;&#x7684;&#x601D;&#x8DEF;&#x5F88;&#x7B80;&#x5355;&#xFF0C;&#x5F53;&#x7136;&#xFF0C;&#x8FC7;&#x4E8E;&#x7B80;&#x5355;&#x7684;&#x7B97;&#x6CD5;&#x4E5F;&#x662F;&#x5236;&#x7EA6;&#x5176;&#x53EC;&#x56DE;&#x7387;&#x7684;&#x539F;&#x56E0;&#x4E4B;&#x4E00;&#x3002;</p>
+<p>&#x5176;&#x4E3B;&#x8981;&#x7684;&#x5904;&#x7406;&#x601D;&#x8DEF;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ol>
+<li>&#x52A0;&#x8F7D;&#x8BCD;&#x5178;dict.txt</li>
+<li>&#x4ECE;&#x5185;&#x5B58;&#x7684;&#x8BCD;&#x5178;&#x4E2D;&#x6784;&#x5EFA;&#x8BE5;&#x53E5;&#x5B50;&#x7684;DAG&#xFF08;&#x6709;&#x5411;&#x65E0;&#x73AF;&#x56FE;&#xFF09;</li>
+<li>&#x5BF9;&#x4E8E;&#x8BCD;&#x5178;&#x4E2D;&#x672A;&#x6536;&#x5F55;&#x8BCD;&#xFF0C;&#x4F7F;&#x7528;HMM&#x6A21;&#x578B;&#x7684;viterbi&#x7B97;&#x6CD5;&#x5C1D;&#x8BD5;&#x5206;&#x8BCD;&#x5904;&#x7406;</li>
+<li>&#x5DF2;&#x6536;&#x5F55;&#x8BCD;&#x548C;&#x672A;&#x6536;&#x5F55;&#x8BCD;&#x5168;&#x90E8;&#x5206;&#x8BCD;&#x5B8C;&#x6BD5;&#x540E;&#xFF0C;&#x4F7F;&#x7528;dp&#x5BFB;&#x627E;DAG&#x7684;&#x6700;&#x5927;&#x6982;&#x7387;&#x8DEF;&#x5F84;</li>
+<li>&#x8F93;&#x51FA;&#x5206;&#x8BCD;&#x7ED3;&#x679C;</li>
+</ol>
+<h1 id="&#x8BCD;&#x5178;&#x7684;&#x52A0;&#x8F7D;">&#x8BCD;&#x5178;&#x7684;&#x52A0;&#x8F7D;</h1><h2 id="&#x8BED;&#x6599;&#x5E93;&#x548C;&#x8BCD;&#x5178;">&#x8BED;&#x6599;&#x5E93;&#x548C;&#x8BCD;&#x5178;</h2><p>jieba&#x5206;&#x8BCD;&#x9ED8;&#x8BA4;&#x7684;&#x6A21;&#x578B;&#x4F7F;&#x7528;&#x4E86;&#x4E00;&#x4E9B;&#x8BED;&#x6599;&#x6765;&#x505A;&#x8BAD;&#x7EC3;&#x96C6;&#xFF0C;&#x5728; <a href="https://github.com/fxsjy/jieba/issues/7" target="_blank" rel="external">https://github.com/fxsjy/jieba/issues/7</a> &#x4E2D;&#xFF0C;&#x4F5C;&#x8005;&#x8BF4;</p>
+<blockquote>
+<p>&#x6765;&#x6E90;&#x4E3B;&#x8981;&#x6709;&#x4E24;&#x4E2A;&#xFF0C;&#x4E00;&#x4E2A;&#x662F;&#x7F51;&#x4E0A;&#x80FD;&#x4E0B;&#x8F7D;&#x5230;&#x7684;1998&#x4EBA;&#x6C11;&#x65E5;&#x62A5;&#x7684;&#x5207;&#x5206;&#x8BED;&#x6599;&#x8FD8;&#x6709;&#x4E00;&#x4E2A;msr&#x7684;&#x5207;&#x5206;&#x8BED;&#x6599;&#x3002;&#x53E6;&#x4E00;&#x4E2A;&#x662F;&#x6211;&#x81EA;&#x5DF1;&#x6536;&#x96C6;&#x7684;&#x4E00;&#x4E9B;txt&#x5C0F;&#x8BF4;&#xFF0C;&#x7528;ictclas&#x628A;&#x4ED6;&#x4EEC;&#x5207;&#x5206;&#xFF08;&#x53EF;&#x80FD;&#x6709;&#x4E00;&#x5B9A;&#x8BEF;&#x5DEE;&#xFF09;&#x3002; &#x7136;&#x540E;&#x7528;python&#x811A;&#x672C;&#x7EDF;&#x8BA1;&#x8BCD;&#x9891;&#x3002;</p>
+</blockquote>
+<p>jieba&#x5206;&#x8BCD;&#x7684;&#x9ED8;&#x8BA4;&#x8BED;&#x6599;&#x5E93;&#x9009;&#x62E9;&#x770B;&#x8D77;&#x6765;&#x6EE1;&#x968F;&#x610F;&#x7684;_(:&#x437;&#x300D;&#x2220;)_&#xFF0C;&#x4F5C;&#x8005;&#x4E5F;&#x5410;&#x69FD;&#x9AD8;&#x8D28;&#x91CF;&#x7684;&#x8BED;&#x6599;&#x5E93;&#x4E0D;&#x597D;&#x627E;&#xFF0C;&#x6240;&#x4EE5;&#x5982;&#x679C;&#x9700;&#x8981;&#x5728;&#x751F;&#x4EA7;&#x73AF;&#x5883;&#x4F7F;&#x7528;jieba&#x5206;&#x8BCD;&#xFF0C;&#x5C3D;&#x91CF;&#x81EA;&#x5DF1;&#x5BFB;&#x627E;&#x4E00;&#x4E9B;&#x9AD8;&#x8D28;&#x91CF;&#x7684;&#x8BED;&#x6599;&#x5E93;&#x6765;&#x505A;&#x8BAD;&#x7EC3;&#x96C6;&#x3002;</p>
+<p>&#x8BED;&#x6599;&#x5E93;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x8BCD;&#x8BED;&#x88AB;&#x7528;&#x6765;&#x505A;&#x4E24;&#x4EF6;&#x4E8B;&#x60C5;&#xFF1A;</p>
+<ol>
+<li>&#x5BF9;&#x8BCD;&#x8BED;&#x7684;&#x9891;&#x7387;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;&#xFF0C;&#x4F5C;&#x4E3A;&#x767B;&#x5F55;&#x8BCD;&#x4F7F;&#x7528;</li>
+<li>&#x5BF9;&#x5355;&#x5B57;&#x5728;&#x8BCD;&#x8BED;&#x4E2D;&#x7684;&#x51FA;&#x73B0;&#x4F4D;&#x7F6E;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;&#xFF0C;&#x4F7F;&#x7528;BMES&#x6A21;&#x578B;&#x8FDB;&#x884C;&#x7EDF;&#x8BA1;&#xFF0C;&#x4F9B;&#x540E;&#x9762;&#x5957;HMM&#x6A21;&#x578B;Viterbi&#x7B97;&#x6CD5;&#x4F7F;&#x7528;&#xFF0C;&#x8FD9;&#x4E2A;&#x540E;&#x9762;&#x8BF4;&#x3002;</li>
+</ol>
+<p>&#x7EDF;&#x8BA1;&#x540E;&#x7684;&#x7ED3;&#x679C;&#x4FDD;&#x5B58;&#x5728;dict.txt&#x4E2D;&#xFF0C;&#x6458;&#x5F55;&#x5176;&#x90E8;&#x5206;&#x7ED3;&#x6784;&#x5982;&#x4E0B;&#xFF1A;<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x4E0A;&#x8BBF; 212 v</span><br><span class="line">&#x4E0A;&#x8BBF;&#x4E8B;&#x4EF6; 3 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BBF;&#x4FE1; 3 nt</span><br><span class="line">&#x4E0A;&#x8BBF;&#x6237; 3 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BBF;&#x8005; 5 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BC1; 120 <span class="literal">j</span></span><br><span class="line">&#x4E0A;&#x8BC1;&#x6240; 8 nt</span><br><span class="line">&#x4E0A;&#x8BC1;&#x6307;&#x6570; 3 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BC1;&#x7EFC;&#x6307; 3 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BC9; 187 v</span><br><span class="line">&#x4E0A;&#x8BC9;&#x4E66; 3 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BC9;&#x4EBA; 3 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BC9;&#x671F; 3 b</span><br><span class="line">&#x4E0A;&#x8BC9;&#x72B6; 4 <span class="keyword">n</span></span><br><span class="line">&#x4E0A;&#x8BFE; 650 v</span><br></pre></td></tr></table></figure></p>
+<p>&#x5176;&#x4E2D;&#xFF0C;<code>&#x7B2C;&#x4E00;&#x5217;&#x662F;&#x4E2D;&#x6587;&#x8BCD;&#x8BED;</code>&#xFF0C;<code>&#x7B2C;&#x4E8C;&#x5217;&#x662F;&#x8BCD;&#x9891;</code>&#xFF0C;&#x7B2C;&#x4E09;&#x5217;&#x662F;&#x8BCD;&#x6027;&#xFF0C;jieba&#x5206;&#x8BCD;&#x73B0;&#x5728;&#x7684;&#x7248;&#x672C;&#x9664;&#x4E86;&#x5206;&#x8BCD;&#x4E5F;&#x63D0;&#x4F9B;&#x8BCD;&#x6027;&#x6807;&#x6CE8;&#x7B49;&#x5176;&#x4ED6;&#x529F;&#x80FD;&#xFF0C;&#x8FD9;&#x4E2A;&#x4E0D;&#x5728;&#x672C;&#x6587;&#x8BA8;&#x8BBA;&#x8303;&#x56F4;&#x5185;&#xFF0C;&#x53EF;&#x4EE5;&#x5FFD;&#x7565;&#x7B2C;&#x4E09;&#x5217;&#x3002;jieba&#x5206;&#x8BCD;&#x6240;&#x6709;&#x7684;&#x7EDF;&#x8BA1;&#x6765;&#x6E90;&#xFF0C;&#x5C31;&#x662F;&#x8FD9;&#x4E2A;&#x8BED;&#x6599;&#x5E93;&#x4EA7;&#x751F;&#x7684;&#x4E24;&#x4E2A;&#x6A21;&#x578B;&#x6587;&#x4EF6;&#x3002;</p>
+<h2 id="&#x5BF9;&#x5B57;&#x5178;&#x7684;&#x5904;&#x7406;">&#x5BF9;&#x5B57;&#x5178;&#x7684;&#x5904;&#x7406;</h2><p>jieba&#x5206;&#x8BCD;&#x4E3A;&#x4E86;&#x5FEB;&#x901F;&#x5730;&#x7D22;&#x5F15;&#x8BCD;&#x5178;&#x4EE5;&#x52A0;&#x5FEB;&#x5206;&#x8BCD;&#x6027;&#x80FD;&#xFF0C;&#x4F7F;&#x7528;&#x4E86;&#x524D;&#x7F00;&#x6570;&#x7EC4;&#x7684;&#x65B9;&#x5F0F;&#x6784;&#x9020;&#x4E86;&#x4E00;&#x4E2A;dict&#x7528;&#x4E8E;&#x5B58;&#x50A8;&#x8BCD;&#x5178;&#x3002;</p>
+<p>&#x5728;&#x65E7;&#x7248;&#x672C;&#x7684;jieba&#x5206;&#x8BCD;&#x4E2D;&#xFF0C;jieba&#x91C7;&#x7528;trie&#x6811;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x6765;&#x5B58;&#x50A8;&#xFF0C;&#x5176;&#x5B9E;&#x5BF9;&#x4E8E;python&#x6765;&#x8BF4;&#xFF0C;&#x4F7F;&#x7528;trie&#x6811;&#x663E;&#x5F97;&#x975E;&#x5E38;&#x591A;&#x4F59;&#xFF0C;&#x6211;&#x5C06;&#x5BF9;&#x65B0;&#x8001;&#x7248;&#x672C;&#x7684;&#x5B57;&#x5178;&#x52A0;&#x8F7D;&#x5206;&#x522B;&#x8FDB;&#x884C;&#x5206;&#x6790;&#x3002;</p>
+<h3 id="trie&#x6811;">trie&#x6811;</h3><h4 id="trie&#x6811;&#x7B80;&#x4ECB;">trie&#x6811;&#x7B80;&#x4ECB;</h4><p>trie&#x6811;&#x53C8;&#x53EB;&#x5B57;&#x5178;&#x6811;&#xFF0C;&#x662F;&#x4E00;&#x79CD;&#x5E38;&#x89C1;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#xFF0C;&#x7528;&#x4E8E;&#x5728;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#x4E32;&#x5217;&#x8868;&#x4E2D;&#x8FDB;&#x884C;&#x5FEB;&#x901F;&#x7684;&#x5B57;&#x7B26;&#x4E32;&#x5339;&#x914D;&#x3002;&#x5176;&#x6838;&#x5FC3;&#x601D;&#x60F3;&#x662F;&#x5C06;&#x62E5;&#x6709;&#x516C;&#x5171;&#x524D;&#x7F00;&#x7684;&#x5355;&#x8BCD;&#x5F52;&#x4E00;&#x5230;&#x4E00;&#x68F5;&#x6811;&#x4E0B;&#x4EE5;&#x51CF;&#x5C11;&#x67E5;&#x8BE2;&#x7684;&#x65F6;&#x95F4;&#x590D;&#x6742;&#x5EA6;&#xFF0C;&#x5176;&#x4E3B;&#x8981;&#x7F3A;&#x70B9;&#x662F;&#x5360;&#x7528;&#x5185;&#x5B58;&#x592A;&#x5927;&#x4E86;&#x3002;</p>
+<p>trie&#x6811;&#x6309;&#x5982;&#x4E0B;&#x65B9;&#x6CD5;&#x6784;&#x9020;&#xFF1A;</p>
+<ul>
+<li>trie&#x6811;&#x7684;&#x6839;&#x8282;&#x70B9;&#x662F;&#x7A7A;&#xFF0C;&#x4E0D;&#x4EE3;&#x8868;&#x4EFB;&#x4F55;&#x542B;&#x4E49;</li>
+<li>&#x5176;&#x4ED6;&#x6BCF;&#x4E2A;&#x8282;&#x70B9;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x5B57;&#x7B26;&#xFF0C;&#x8BCD;&#x5178;&#x4E2D;&#x6240;&#x6709;&#x8BCD;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x7684;&#x96C6;&#x5408;&#x4F5C;&#x4E3A;&#x7B2C;&#x4E00;&#x5C42;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x4EE5;&#x5B57;&#x7B26;&#x3B1;&#x5F00;&#x5934;&#x7684;&#x5355;&#x8BCD;&#x6302;&#x5728;&#x4EE5;&#x3B1;&#x4E3A;&#x6839;&#x8282;&#x70B9;&#x7684;&#x5B50;&#x6811;&#x4E0B;&#xFF0C;&#x6240;&#x6709;&#x4EE5;&#x3B1;&#x5F00;&#x5934;&#x7684;&#x5355;&#x8BCD;&#x7684;&#x7B2C;&#x4E8C;&#x4E2A;&#x5B57;&#x7684;&#x96C6;&#x5408;&#x4F5C;&#x4E3A;&#x3B1;&#x5B50;&#x6811;&#x4E0B;&#x7684;&#x7B2C;&#x4E00;&#x5C42;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#xFF0C;&#x4EE5;&#x6B64;&#x7C7B;&#x63A8;</li>
+<li>&#x4ECE;&#x6839;&#x8282;&#x70B9;&#x5230;&#x67D0;&#x4E00;&#x8282;&#x70B9;&#xFF0C;&#x8DEF;&#x5F84;&#x4E0A;&#x7ECF;&#x8FC7;&#x7684;&#x5B57;&#x7B26;&#x8FDE;&#x63A5;&#x8D77;&#x6765;&#xFF0C;&#x4E3A;&#x8BE5;&#x8282;&#x70B9;&#x5BF9;&#x5E94;&#x7684;&#x5B57;&#x7B26;&#x4E32;</li>
+</ul>
+<p>&#x4E00;&#x4E2A;&#x4EE5;<code>and at as cn com</code>&#x6784;&#x9020;&#x7684;trie&#x6811;&#x5982;&#x4E0B;&#x56FE;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/2012112521092438.png" alt="trie tree"></p>
+<p>&#x67E5;&#x627E;&#x8FC7;&#x7A0B;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ul>
+<li>&#x4ECE;&#x6839;&#x7ED3;&#x70B9;&#x5F00;&#x59CB;&#x4E00;&#x6B21;&#x641C;&#x7D22;&#xFF1B;</li>
+<li>&#x53D6;&#x5F97;&#x8981;&#x67E5;&#x627E;&#x5173;&#x952E;&#x8BCD;&#x7684;&#x7B2C;&#x4E00;&#x4E2A;&#x5B57;&#x6BCD;&#xFF0C;&#x5E76;&#x6839;&#x636E;&#x8BE5;&#x5B57;&#x6BCD;&#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684;&#x5B50;&#x6811;&#x5E76;&#x8F6C;&#x5230;&#x8BE5;&#x5B50;&#x6811;&#x7EE7;&#x7EED;&#x8FDB;&#x884C;&#x68C0;&#x7D22;&#xFF1B;</li>
+<li>&#x5728;&#x76F8;&#x5E94;&#x7684;&#x5B50;&#x6811;&#x4E0A;&#xFF0C;&#x53D6;&#x5F97;&#x8981;&#x67E5;&#x627E;&#x5173;&#x952E;&#x8BCD;&#x7684;&#x7B2C;&#x4E8C;&#x4E2A;&#x5B57;&#x6BCD;,&#x5E76;&#x8FDB;&#x4E00;&#x6B65;&#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684;&#x5B50;&#x6811;&#x8FDB;&#x884C;&#x68C0;&#x7D22;&#x3002;</li>
+<li>&#x8FED;&#x4EE3;&#x8FC7;&#x7A0B;&#x2026;&#x2026;</li>
+<li>&#x5728;&#x67D0;&#x4E2A;&#x7ED3;&#x70B9;&#x5904;&#xFF0C;&#x5173;&#x952E;&#x8BCD;&#x7684;&#x6240;&#x6709;&#x5B57;&#x6BCD;&#x5DF2;&#x88AB;&#x53D6;&#x51FA;&#xFF0C;&#x5219;&#x8BFB;&#x53D6;&#x9644;&#x5728;&#x8BE5;&#x7ED3;&#x70B9;&#x4E0A;&#x7684;&#x4FE1;&#x606F;&#xFF0C;&#x5373;&#x5B8C;&#x6210;&#x67E5;&#x627E;&#x3002;&#x5176;&#x4ED6;&#x64CD;&#x4F5C;&#x7C7B;&#x4F3C;&#x5904;&#x7406;.</li>
+</ul>
+<p>&#x5982;&#x67E5;&#x8BE2;at&#xFF0C;&#x53EF;&#x4EE5;&#x627E;&#x5230;&#x8DEF;&#x5F84;<code>root-a-t</code>&#x7684;&#x8DEF;&#x5F84;&#xFF0C;&#x5BF9;&#x4E8E;&#x5355;&#x8BCD;av&#xFF0C;&#x4ECE;root&#x627E;&#x5230;a&#x540E;&#xFF0C;&#x5728;a&#x7684;&#x53F6;&#x5B50;&#x8282;&#x70B9;&#x4E0B;&#x9762;&#x4E0D;&#x80FD;&#x627E;&#x5230;v&#x7ED3;&#x70B9;&#xFF0C;&#x5219;&#x67E5;&#x627E;&#x5931;&#x8D25;&#x3002;</p>
+<p>trie&#x6811;&#x7684;&#x67E5;&#x627E;&#x65F6;&#x95F4;&#x590D;&#x6742;&#x5EA6;&#x4E3A;O(k)&#xFF0C;k = len(s)&#xFF0C;s&#x4E3A;&#x76EE;&#x6807;&#x4E32;&#x3002;</p>
+<p>&#x4E8C;&#x53C9;&#x67E5;&#x627E;&#x6811;&#x7684;&#x67E5;&#x627E;&#x65F6;&#x95F4;&#x590D;&#x6742;&#x5EA6;&#x4E3A;O(lgn)&#xFF0C;&#x6BD4;&#x8D77;&#x4E8C;&#x53C9;&#x67E5;&#x627E;&#x6811;&#xFF0C;trie&#x6811;&#x7684;&#x67E5;&#x627E;&#x548C;&#x7ED3;&#x70B9;&#x6570;&#x91CF;&#x65E0;&#x5173;&#xFF0C;&#x56E0;&#x6B64;&#x66F4;&#x52A0;&#x9002;&#x5408;&#x8BCD;&#x6C47;&#x91CF;&#x5927;&#x7684;&#x60C5;&#x51B5;&#x3002;</p>
+<p>&#x4F46;&#x662F;trie&#x6811;&#x5BF9;&#x7A7A;&#x95F4;&#x7684;&#x6D88;&#x8017;&#x662F;&#x5F88;&#x5927;&#x7684;&#xFF0C;&#x662F;&#x4E00;&#x4E2A;&#x5178;&#x578B;&#x7684;&#x7A7A;&#x95F4;&#x6362;&#x65F6;&#x95F4;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x3002;</p>
+<h4 id="jieba&#x5206;&#x8BCD;&#x7684;trie&#x6811;">jieba&#x5206;&#x8BCD;&#x7684;trie&#x6811;</h4><p>&#x65E7;&#x7248;&#x672C;jieba&#x5206;&#x8BCD;&#x4E2D;&#x5173;&#x4E8E;trie&#x6811;&#x7684;&#x751F;&#x6210;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_trie</span><span class="params">(f_name)</span>:</span>  </span><br><span class="line">    lfreq = {}  </span><br><span class="line">    trie = {}  </span><br><span class="line">    ltotal = <span class="number">0.0</span>  </span><br><span class="line">    <span class="keyword">with</span> open(f_name, <span class="string">&apos;rb&apos;</span>) <span class="keyword">as</span> f:  </span><br><span class="line">        lineno = <span class="number">0</span>   </span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f.read().rstrip().decode(<span class="string">&apos;utf-8&apos;</span>).split(<span class="string">&apos;\n&apos;</span>):  </span><br><span class="line">            lineno += <span class="number">1</span>  </span><br><span class="line">            <span class="keyword">try</span>:  </span><br><span class="line">                word,freq,_ = line.split(<span class="string">&apos; &apos;</span>)  </span><br><span class="line">                freq = float(freq)  </span><br><span class="line">                lfreq[word] = freq  </span><br><span class="line">                ltotal+=freq  </span><br><span class="line">                p = trie  </span><br><span class="line">                <span class="keyword">for</span> c <span class="keyword">in</span> word:  </span><br><span class="line">                    <span class="keyword">if</span> c <span class="keyword">not</span> <span class="keyword">in</span> p:  </span><br><span class="line">                        p[c] ={}  </span><br><span class="line">                    p = p[c]  </span><br><span class="line">                p[<span class="string">&apos;&apos;</span>]=<span class="string">&apos;&apos;</span> <span class="comment">#ending flag  </span></span><br><span class="line">            <span class="keyword">except</span> ValueError, e:  </span><br><span class="line">                logger.debug(<span class="string">&apos;%s at line %s %s&apos;</span> % (f_name,  lineno, line))  </span><br><span class="line">                <span class="keyword">raise</span> ValueError, e  </span><br><span class="line">    <span class="keyword">return</span> trie, lfreq, ltotal</span><br></pre></td></tr></table></figure></p>
+<p>&#x4EE3;&#x7801;&#x5F88;&#x7B80;&#x5355;&#xFF0C;&#x904D;&#x5386;&#x6BCF;&#x884C;&#x6587;&#x4EF6;&#xFF0C;&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A;&#x5355;&#x8BCD;&#x7684;&#x6BCF;&#x4E2A;&#x5B57;&#x6BCD;&#xFF0C;&#x5728;trie&#x6811;&#xFF08;trie&#x548C;p&#x53D8;&#x91CF;&#xFF09;&#x4E2D;&#x67E5;&#x627E;&#x662F;&#x5426;&#x5B58;&#x5728;&#xFF0C;&#x5982;&#x679C;&#x5B58;&#x5728;&#xFF0C;&#x5219;&#x6302;&#x5230;&#x4E0B;&#x9762;&#xFF0C;&#x5982;&#x679C;&#x4E0D;&#x5B58;&#x5728;&#xFF0C;&#x5C31;&#x5EFA;&#x7ACB;&#x65B0;&#x5B50;&#x6811;&#x3002;</p>
+<p>jieba&#x5206;&#x8BCD;&#x91C7;&#x7528;python &#x7684;dict&#x6765;&#x5B58;&#x50A8;&#x6811;&#xFF0C;&#x8FD9;&#x4E5F;&#x662F;python&#x5BF9;&#x6811;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#x7684;&#x901A;&#x7528;&#x505A;&#x6CD5;&#x3002;</p>
+<p>&#x6211;&#x5199;&#x4E86;&#x4E00;&#x4E2A;&#x51FD;&#x6570;&#x6765;&#x76F4;&#x89C2;&#x8F93;&#x51FA;&#x5176;&#x751F;&#x6210;&#x7684;trie&#x6811;&#xFF0C;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_trie</span><span class="params">(tree, buff, level = <span class="number">0</span>, prefix=<span class="string">&apos;&apos;</span>)</span>:</span></span><br><span class="line">    count = len(tree.items())</span><br><span class="line">    <span class="keyword">for</span> k,v <span class="keyword">in</span> tree.items():</span><br><span class="line">        count -= <span class="number">1</span></span><br><span class="line">        buff.append(<span class="string">&apos;%s +- %s&apos;</span> % ( prefix , k <span class="keyword">if</span> k!=<span class="string">&apos;&apos;</span> <span class="keyword">else</span> <span class="string">&apos;NULL&apos;</span>))</span><br><span class="line">        <span class="keyword">if</span> v:</span><br><span class="line">            <span class="keyword">if</span> count  == <span class="number">0</span>:</span><br><span class="line">                print_trie(v, buff, level + <span class="number">1</span>, prefix + <span class="string">&apos;    &apos;</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print_trie(v, buff, level + <span class="number">1</span>, prefix + <span class="string">&apos; |  &apos;</span>)</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">trie, list_freq, total =  gen_trie(<span class="string">&apos;a.txt&apos;</span>)</span><br><span class="line">buff = [<span class="string">&apos;ROOT&apos;</span>]</span><br><span class="line">print_trie(trie, buff, <span class="number">0</span>)</span><br><span class="line">print(<span class="string">&apos;\n&apos;</span>.join(buff))</span><br></pre></td></tr></table></figure>
+<p>&#x4F7F;&#x7528;&#x4E0A;&#x9762;&#x5217;&#x4E3E;&#x51FA;&#x7684;dict.txt&#x7684;&#x90E8;&#x5206;&#x8BCD;&#x5178;&#x4F5C;&#x4E3A;&#x6837;&#x4F8B;&#xFF0C;&#x8F93;&#x51FA;&#x7ED3;&#x679C;&#x5982;&#x4E0B;<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">ROOT</span><br><span class="line"> +- &#x4E0A;</span><br><span class="line">     +- &#x8BC1;</span><br><span class="line">     |<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x6240;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x7EFC;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- &#x6307;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">       +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x6307;</span><br><span class="line">     </span>|<span class="string">       +- &#x6570;</span><br><span class="line">     </span>|<span class="string">           +- NULL</span><br><span class="line">     +- &#x8BC9;</span><br><span class="line">     </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x4EBA;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x72B6;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x671F;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x4E66;</span><br><span class="line">     </span>|<span class="string">       +- NULL</span><br><span class="line">     +- &#x8BBF;</span><br><span class="line">     </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x4FE1;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x4E8B;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- &#x4EF6;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">       +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x8005;</span><br><span class="line">     </span>|<span class="string">   </span>|<span class="string">   +- NULL</span><br><span class="line">     </span>|<span class="string">   +- &#x6237;</span><br><span class="line">     </span>|<span class="string">       +- NULL</span><br><span class="line">     +- &#x8BFE;</span><br><span class="line">         +- NULL</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="&#x4F7F;&#x7528;trie&#x6811;&#x7684;&#x95EE;&#x9898;">&#x4F7F;&#x7528;trie&#x6811;&#x7684;&#x95EE;&#x9898;</h4><p>&#x672C;&#x6765;jieba&#x91C7;&#x7528;trie&#x6811;&#x7684;&#x51FA;&#x53D1;&#x70B9;&#x662F;&#x53EF;&#x4EE5;&#x7684;&#xFF0C;&#x5229;&#x7528;&#x7A7A;&#x95F4;&#x6362;&#x53D6;&#x65F6;&#x95F4;&#xFF0C;&#x52A0;&#x5FEB;&#x5206;&#x8BCD;&#x7684;&#x67E5;&#x627E;&#x901F;&#x5EA6;&#xFF0C;&#x52A0;&#x901F;&#x5168;&#x5207;&#x5206;&#x64CD;&#x4F5C;&#x3002;&#x4F46;&#x662F;&#x95EE;&#x9898;&#x5728;&#x4E8E;python&#x7684;dict&#x539F;&#x751F;&#x4F7F;&#x7528;&#x54C8;&#x5E0C;&#x8868;&#x5B9E;&#x73B0;&#xFF0C;&#x5728;dict&#x4E2D;&#x83B7;&#x53D6;&#x5355;&#x8BCD;&#x662F;&#x8FD1;&#x4E4E;O(1)&#x7684;&#x65F6;&#x95F4;&#x590D;&#x6742;&#x5EA6;&#xFF0C;&#x6240;&#x4EE5;&#x4F7F;&#x7528;trie&#x6811;&#xFF0C;&#x5176;&#x5B9E;&#x662F;&#x4E00;&#x79CD;&#x907F;&#x91CD;&#x5C31;&#x8F7B;&#x7684;&#x505A;&#x6CD5;&#x3002;</p>
+<p>&#x4E8E;&#x662F;2014&#x5E74;&#x67D0;&#x4F4D;&#x540C;&#x5B66;&#x7684;PR&#x4FEE;&#x6B63;&#x4E86;&#x8FD9;&#x4E00;&#x60C5;&#x51B5;&#x3002;</p>
+<h3 id="&#x524D;&#x7F00;&#x6570;&#x7EC4;">&#x524D;&#x7F00;&#x6570;&#x7EC4;</h3><p>&#x5728;2014&#x5E74;&#x7684;&#x67D0;&#x6B21;PR&#x4E2D;&#xFF08;<a href="https://github.com/fxsjy/jieba/pull/187" target="_blank" rel="external">https://github.com/fxsjy/jieba/pull/187</a> &#xFF09;&#xFF0C;&#x63D0;&#x4EA4;&#x8005;&#x5C06;trie&#x6811;&#x6539;&#x6210;&#x524D;&#x7F00;&#x6570;&#x7EC4;&#xFF0C;&#x5927;&#x5927;&#x5730;&#x51CF;&#x5C11;&#x4E86;&#x5185;&#x5B58;&#x7684;&#x4F7F;&#x7528;&#xFF0C;&#x52A0;&#x5FEB;&#x4E86;&#x67E5;&#x627E;&#x7684;&#x901F;&#x5EA6;&#x3002;</p>
+<p>&#x73B0;&#x5728;jieba&#x5206;&#x8BCD;&#x5BF9;&#x4E8E;&#x8BCD;&#x5178;&#x7684;&#x64CD;&#x4F5C;&#xFF0C;&#x6539;&#x4E3A;&#x4E86;&#x4E00;&#x5C42;word:freq&#x7684;&#x7ED3;&#x6784;&#xFF0C;&#x5B58;&#x4E8E;lfreq&#x4E2D;&#xFF0C;&#x5176;&#x5177;&#x4F53;&#x64CD;&#x4F5C;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ol>
+<li>&#x5BF9;&#x4E8E;&#x6BCF;&#x4E2A;&#x6536;&#x5F55;&#x8BCD;&#xFF0C;&#x5982;&#x679C;&#x5176;&#x5728;lfreq&#x4E2D;&#xFF0C;&#x5219;&#x8BCD;&#x9891;&#x7D2F;&#x79EF;&#xFF0C;&#x5982;&#x679C;&#x4E0D;&#x5728;&#x5219;&#x52A0;&#x5165;lfreq</li>
+<li>&#x5BF9;&#x4E8E;&#x8BE5;&#x6536;&#x5F55;&#x8BCD;&#x7684;&#x6240;&#x6709;&#x524D;&#x7F00;&#x8FDB;&#x884C;&#x4E0A;&#x4E00;&#x6B65;&#x64CD;&#x4F5C;&#xFF0C;&#x5982;&#x5355;&#x8BCD;&#x2019;cat&#x2019;&#xFF0C;&#x5219;&#x5BF9;c, ca, cat&#x5206;&#x522B;&#x8FDB;&#x884C;&#x7B2C;&#x4E00;&#x6B65;&#x64CD;&#x4F5C;&#x3002;&#x9664;&#x4E86;&#x5355;&#x8BCD;&#x672C;&#x8EAB;&#x7684;&#x6240;&#x6709;&#x524D;&#x7F00;&#x8BCD;&#x9891;&#x521D;&#x59CB;&#x4E3A;0.</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_pfdict</span><span class="params">(self, f)</span>:</span></span><br><span class="line">        lfreq = {}</span><br><span class="line">        ltotal = <span class="number">0</span></span><br><span class="line">        f_name = resolve_filename(f)</span><br><span class="line">        <span class="keyword">for</span> lineno, line <span class="keyword">in</span> enumerate(f, <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                line = line.strip().decode(<span class="string">&apos;utf-8&apos;</span>)</span><br><span class="line">                word, freq = line.split(<span class="string">&apos; &apos;</span>)[:<span class="number">2</span>]</span><br><span class="line">                freq = int(freq)</span><br><span class="line">                lfreq[word] = freq</span><br><span class="line">                ltotal += freq</span><br><span class="line">                <span class="keyword">for</span> ch <span class="keyword">in</span> xrange(len(word)):</span><br><span class="line">                    wfrag = word[:ch + <span class="number">1</span>]</span><br><span class="line">                    <span class="keyword">if</span> wfrag <span class="keyword">not</span> <span class="keyword">in</span> lfreq:</span><br><span class="line">                        lfreq[wfrag] = <span class="number">0</span></span><br><span class="line">            <span class="keyword">except</span> ValueError:</span><br><span class="line">                <span class="keyword">raise</span> ValueError(</span><br><span class="line">                    <span class="string">&apos;invalid dictionary entry in %s at Line %s: %s&apos;</span> % (f_name, lineno, line))</span><br><span class="line">        f.close()</span><br><span class="line">        <span class="keyword">return</span> lfreq, ltotal</span><br></pre></td></tr></table></figure>
+<p>&#x5F88;&#x6734;&#x7D20;&#x7684;&#x505A;&#x6CD5;&#xFF0C;&#x7136;&#x800C;&#x5145;&#x5206;&#x5229;&#x7528;&#x4E86;python&#x7684;dict&#x7C7B;&#x578B;&#xFF0C;&#x6548;&#x7387;&#x63D0;&#x9AD8;&#x4E86;&#x4E0D;&#x5C11;&#x3002;</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jieba/" rel="tag">#jieba</a>
+          
+            <a href="/tags/nlp/" rel="tag">#nlp</a>
+          
+            <a href="/tags/分词/" rel="tag">#分词</a>
+          
+            <a href="/tags/自然语言处理/" rel="tag">#自然语言处理</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Py_tricks_python实现不可修改的常量/" rel="next" title="Py tricks(1): python实现不可修改的常量">
+                <i class="fa fa-chevron-left"></i> Py tricks(1): python实现不可修改的常量
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="jieba分词学习笔记（一）/"
+           data-title="jieba分词学习笔记（一）" data-url="http://yoursite.com/jieba分词学习笔记（一）/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="Peng Foo" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Peng Foo</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">full-stack就是实验室项目多的意思</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#序"><span class="nav-number">1.</span> <span class="nav-text">序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jieba分词的基本思路"><span class="nav-number">2.</span> <span class="nav-text">jieba分词的基本思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#词典的加载"><span class="nav-number">3.</span> <span class="nav-text">词典的加载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#语料库和词典"><span class="nav-number">3.1.</span> <span class="nav-text">语料库和词典</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对字典的处理"><span class="nav-number">3.2.</span> <span class="nav-text">对字典的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#trie树"><span class="nav-number">3.2.1.</span> <span class="nav-text">trie树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#trie树简介"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">trie树简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jieba分词的trie树"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">jieba分词的trie树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用trie树的问题"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">使用trie树的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前缀数组"><span class="nav-number">3.2.2.</span> <span class="nav-text">前缀数组</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peng Foo</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"pengfoo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
