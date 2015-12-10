@@ -1,0 +1,766 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="full-stack就是实验室项目多的意思" />
+
+
+
+
+  <meta name="keywords" content="ML,Machine Learning,机器学习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;lt;!-- toc --&amp;gt;
+
+kNN in one sentence
+kNN&amp;#x7B80;&amp;#x4ECB;
+kNN
+&amp;#x8DDD;&amp;#x79BB;&amp;#x7684;&amp;#x9009;&amp;#x62E9;
+k&amp;#x7684;&amp;#x9009;&amp;#x53D6;
+kNN&amp;#x7684;&amp;#x4F18;&amp;#x70B9;
+kNN&amp;#x7684;&amp;#x7F3A;&amp;#x70B9;
+kNN tricks
+Normaliz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习入门（二）：最简单的ML算法--kNN算法">
+<meta property="og:url" content="http://yoursite.com/机器学习入门（二）：最简单的ML算法-kNN算法/index.html">
+<meta property="og:site_name" content="Peng Foo">
+<meta property="og:description" content="&amp;lt;!-- toc --&amp;gt;
+
+kNN in one sentence
+kNN&amp;#x7B80;&amp;#x4ECB;
+kNN
+&amp;#x8DDD;&amp;#x79BB;&amp;#x7684;&amp;#x9009;&amp;#x62E9;
+k&amp;#x7684;&amp;#x9009;&amp;#x53D6;
+kNN&amp;#x7684;&amp;#x4F18;&amp;#x70B9;
+kNN&amp;#x7684;&amp;#x7F3A;&amp;#x70B9;
+kNN tricks
+Normaliz">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/03087bf40ad162d95867202e15dfa9ec8a13cd73.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/bf096b63f6246b60f20ccd5aebf81a4c510fa29a.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ截图20151211050058.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20151211051212.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ截图2015121105134.jpg">
+<meta property="og:updated_time" content="2015-12-10T21:32:50.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习入门（二）：最简单的ML算法--kNN算法">
+<meta name="twitter:description" content="&amp;lt;!-- toc --&amp;gt;
+
+kNN in one sentence
+kNN&amp;#x7B80;&amp;#x4ECB;
+kNN
+&amp;#x8DDD;&amp;#x79BB;&amp;#x7684;&amp;#x9009;&amp;#x62E9;
+k&amp;#x7684;&amp;#x9009;&amp;#x53D6;
+kNN&amp;#x7684;&amp;#x4F18;&amp;#x70B9;
+kNN&amp;#x7684;&amp;#x7F3A;&amp;#x70B9;
+kNN tricks
+Normaliz">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> 机器学习入门（二）：最简单的ML算法--kNN算法 | Peng Foo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Peng Foo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习入门（二）：最简单的ML算法--kNN算法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2015-12-11T04:19:00+08:00" content="2015-12-11">
+              2015-12-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/机器学习入门（二）：最简单的ML算法-kNN算法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="机器学习入门（二）：最简单的ML算法-kNN算法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><!-- toc -->
+<ul>
+<li><a href="#knn-in-one-sentence">kNN in one sentence</a></li>
+<li><a href="#knn&#x7B80;&#x4ECB;">kNN&#x7B80;&#x4ECB;</a></li>
+<li><a href="#knn">kNN</a><ul>
+<li><a href="#&#x8DDD;&#x79BB;&#x7684;&#x9009;&#x62E9;">&#x8DDD;&#x79BB;&#x7684;&#x9009;&#x62E9;</a></li>
+<li><a href="#k&#x7684;&#x9009;&#x53D6;">k&#x7684;&#x9009;&#x53D6;</a></li>
+<li><a href="#knn&#x7684;&#x4F18;&#x70B9;">kNN&#x7684;&#x4F18;&#x70B9;</a></li>
+<li><a href="#knn&#x7684;&#x7F3A;&#x70B9;">kNN&#x7684;&#x7F3A;&#x70B9;</a></li>
+<li><a href="#knn-tricks">kNN tricks</a><ul>
+<li><a href="#normalization">Normalization</a></li>
+<li><a href="#knn&#x52A0;&#x6743;">kNN&#x52A0;&#x6743;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#knn&#x7684;&#x5B9E;&#x73B0;">kNN&#x7684;&#x5B9E;&#x73B0;</a></li>
+</ul>
+<!-- tocstop -->
+<hr>
+<h2 id="knn-in-one-sentence">kNN in one sentence</h2><p>kNN&#x662F;&#x6700;&#x7B80;&#x5355;&#x7684;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x5206;&#x7C7B;&#x7B97;&#x6CD5;&#xFF0C;&#x9002;&#x7528;&#x4E8E;&#x591A;&#x5206;&#x7C7B;&#x95EE;&#x9898;&#xFF0C;&#x5176;&#x4E2D;&#x5FC3;&#x601D;&#x60F3;&#x662F;&#xFF0C;&#x5BF9;&#x4E8E;&#x5F85;&#x9884;&#x6D4B;&#x70B9;x&#xFF0C;&#x5176;&#x6700;&#x6709;&#x53EF;&#x80FD;&#x5C5E;&#x4E8E;&#x8DDD;&#x79BB;&#x5176;&#x6700;&#x8FD1;&#x7684;k&#x4E2A;sample&#x4E2D;&#x540C;&#x7C7B;&#x522B;&#x6570;&#x91CF;&#x6700;&#x591A;&#x7684;&#x90A3;&#x4E00;&#x7C7B;&#x3002;&#x5373;&#x6240;&#x8C13;&#x201C;&#x8FD1;&#x6731;&#x8005;&#x8D64;&#xFF0C;&#x8FD1;&#x58A8;&#x8005;&#x9ED1;&#x201D;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;kNN&#xFF0C;&#x6211;&#x7684;&#x5EFA;&#x8BAE;&#x662F;&#x62FF;&#x6765;&#x5165;&#x95E8;&#xFF0C;&#x6709;&#x4F18;&#x5316;kNN&#x5230;&#x8DB3;&#x591F;&#x7684;&#x51C6;&#x786E;&#x7387;/&#x53EC;&#x56DE;&#x7387;&#x7684;&#x65F6;&#x95F4;&#xFF0C;&#xFF08;&#x53EF;&#x80FD;&#xFF09;&#x591F;&#x7528;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x6A21;&#x578B;&#x4F18;&#x5316;&#x65B0;&#x7684;&#x53C2;&#x6570;&#x8F7B;&#x677E;&#x8FBE;&#x5230;&#x66F4;&#x597D;&#x7684;&#x6548;&#x679C;&#x4E86;&#x3002;</p>
+<h2 id="knn&#x7B80;&#x4ECB;">kNN&#x7B80;&#x4ECB;</h2><p>&#x673A;&#x5668;&#x5B66;&#x4E60;&#x662F;&#x4E00;&#x95E8;&#x770B;&#x4E0A;&#x53BB;&#x9AD8;&#x5927;&#x4E0A;&#x7684;&#x5B66;&#x79D1;&#xFF0C;&#x800C;&#x5176;&#x4E2D;&#x5176;&#x5B9E;&#x4E0D;&#x4E4F;&#x63A5;&#x5730;&#x6C14;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x6BD4;&#x5982;kNN&#x3002;kNN&#x7B97;&#x6CD5;&#x53C8;&#x79F0;&#x4E3A;k&#x8FD1;&#x90BB;&#x5206;&#x7C7B;(k-nearest neighbor classification)&#x7B97;&#x6CD5;&#x3002;&#x7528;kNN&#x6765;&#x5165;&#x95E8;&#x673A;&#x5668;&#x5B66;&#x4E60;&#xFF0C;&#x80FD;&#x8F7B;&#x677E;&#x83B7;&#x5F97;&#x4E0D;&#x5C0F;&#x7684;&#x6210;&#x5C31;&#x611F;&#x3002;</p>
+<p>kNN&#x662F;&#x4E00;&#x79CD;&#x5206;&#x7C7B;&#x7B97;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x9002;&#x7528;&#x4E8E;&#x591A;&#x5206;&#x7C7B;&#x3002;</p>
+<p>kNN&#x7684;&#x5B66;&#x4E60;&#x65B9;&#x6CD5;&#x5F88;&#x6734;&#x7D20;&#xFF0C;&#x7B80;&#x5355;&#x8BF4;&#x5C31;&#x662F;&#x7AD9;&#x961F;&#xFF0C;&#x5BF9;&#x4E8E;&#x5DF2;&#x6709;&#x7684;&#x8BAD;&#x7EC3;&#x96C6;&#xFF0C;&#x5F53;&#x4F20;&#x5165;&#x672A;&#x77E5;&#x6570;&#x636E;&#x5F85;&#x5206;&#x7C7B;&#x65F6;&#xFF0C;&#x5206;&#x522B;&#x8BA1;&#x7B97;&#x672A;&#x77E5;&#x6570;&#x636E;&#x548C;&#x8BAD;&#x7EC3;&#x96C6;&#x6240;&#x6709;&#x6570;&#x636E;&#x70B9;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x5C06;&#x8DDD;&#x79BB;&#x4ECE;&#x5C0F;&#x5230;&#x5927;&#x53D6;&#x524D;k&#x4E2A;&#x3002;&#x6839;&#x636E;&#x8FD9;k&#x4E2A;&#x70B9;&#x7684;&#x5206;&#x7C7B;&#x60C5;&#x51B5;&#x5224;&#x65AD;&#x672A;&#x77E5;&#x6570;&#x636E;&#x7684;&#x5206;&#x7C7B;&#x3002;&#x901A;&#x5E38;&#x54EA;&#x4E2A;&#x7C7B;&#x522B;&#x5728;&#x524D;k&#x4E2A;&#x6570;&#x636E;&#x70B9;&#x4E2D;&#x6570;&#x91CF;&#x6700;&#x591A;&#xFF0C;&#x6211;&#x4EEC;&#x5C31;&#x8BA4;&#x4E3A;&#x672A;&#x77E5;&#x6570;&#x636E;&#x662F;&#x54EA;&#x4E2A;&#x7C7B;&#x522B;&#x7684;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/03087bf40ad162d95867202e15dfa9ec8a13cd73.jpg" alt="kNN"></p>
+<p>&#x5982;&#x56FE;&#xFF0C;&#x5728;&#x62E5;&#x6709;&#x4E09;&#x4E2A;&#x5206;&#x7C7B;&#x7684;&#x82E5;&#x5E72;&#x6837;&#x672C;&#x70B9;&#x7684;&#x8BAD;&#x7EC3;&#x96C6;&#x4E2D;&#xFF0C;&#x5BF9;&#x672A;&#x77E5;&#x5143;&#x7D20;Xu&#xFF0C;&#x6211;&#x4EEC;&#x53D6;k=5&#xFF0C;&#x9009;&#x53D6;&#x8DDD;&#x79BB;&#x5176;&#x6700;&#x8FD1;&#x7684;5&#x4E2A;&#x8BAD;&#x7EC3;&#x96C6;&#x7684;&#x70B9;&#xFF0C;&#x5176;&#x4E2D;4&#x4E2A;&#x662F;&#x7EA2;&#x8272;&#x5706;&#x5708;&#xFF0C;1&#x4E2A;&#x662F;&#x7EFF;&#x8272;&#x65B9;&#x5757;&#xFF0C;0&#x4E2A;&#x84DD;&#x8272;&#x4E09;&#x89D2;&#xFF0C;&#x90A3;&#x4E48;&#x6211;&#x4EEC;&#x8BA4;&#x4E3A;&#xFF0C;&#x5176;&#x6700;&#x53EF;&#x80FD;&#x6240;&#x5C5E;&#x7684;&#x5206;&#x7C7B;&#x662F;&#x7EA2;&#x8272;&#x5706;&#x5708;&#x3002;</p>
+<h2 id="knn">kNN</h2><p>&#x7531;kNN&#x7B97;&#x6CD5;&#x7684;&#x63CF;&#x8FF0;&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x51FA;&#xFF0C;kNN&#x662F;&#x4E00;&#x4E2A;&#x514D;&#x8BAD;&#x7EC3;&#x7684;&#xFF0C;&#x53C2;&#x6570;&#x5C11;&#x7684;&#xFF0C;&#x6734;&#x7D20;&#x7684;&#x7B97;&#x6CD5;&#xFF0C;&#x7136;&#x800C;kNN&#x4ECD;&#x6709;&#x51E0;&#x4E2A;&#x5173;&#x952E;&#x70B9;&#xFF0C;&#x8DDD;&#x79BB;&#x7684;&#x8BA1;&#x7B97;&#x548C;k&#x7684;&#x9009;&#x62E9;&#x3002;</p>
+<h3 id="&#x8DDD;&#x79BB;&#x7684;&#x9009;&#x62E9;">&#x8DDD;&#x79BB;&#x7684;&#x9009;&#x62E9;</h3><p>&#x5728;kNN&#x7684;&#x601D;&#x60F3;&#x4E2D;&#xFF0C;&#x4E24;&#x4E2A;&#x70B9;&#x4E4B;&#x95F4;&#x8DDD;&#x79BB;&#x7684;&#x5927;&#x5C0F;&#x6807;&#x5B9A;&#x4E86;&#x4E24;&#x4E2A;&#x70B9;&#x7684;&#x76F8;&#x4F3C;&#x5EA6;&#x5927;&#x5C0F;&#xFF0C;&#x901A;&#x5E38;&#x8DDD;&#x79BB;&#x5C0F;&#x7684;&#x70B9;&#x66F4;&#x52A0;&#x76F8;&#x4F3C;&#xFF0C;&#x4E5F;&#x66F4;&#x5BB9;&#x6613;&#x5C5E;&#x4E8E;&#x4E00;&#x4E2A;&#x7C7B;&#x522B;&#x3002;</p>
+<p>&#x8DDD;&#x79BB;&#x7684;&#x9009;&#x62E9;&#x5F88;&#x5927;&#x7A0B;&#x5EA6;&#x4E0A;&#x5F71;&#x54CD;kNN&#x7684;&#x6548;&#x679C;&#x597D;&#x574F;&#xFF0C;&#x8DDD;&#x79BB;&#x5927;&#x5C0F;&#x5FC5;&#x987B;&#x8DB3;&#x591F;&#x4F53;&#x73B0;&#x51FA;&#x6837;&#x672C;&#x70B9;&#x4E4B;&#x95F4;&#x7684;&#x76F8;&#x4F3C;&#x548C;&#x4E0D;&#x540C;&#x7684;&#x7A0B;&#x5EA6;&#x3002;</p>
+<p>&#x901A;&#x5E38;&#x9ED8;&#x8BA4;&#x7684;&#x8DDD;&#x79BB;&#x662F;&#x6B27;&#x6C0F;&#x8DDD;&#x79BB;&#xFF0C;&#x8FD9;&#x79CD;&#x6211;&#x4EEC;&#x4ECE;&#x5C0F;&#x5F00;&#x59CB;&#x5B66;&#x4E60;&#x7684;&#x5750;&#x6807;&#x7CFB;&#x4E0B;&#x7684;&#x8DDD;&#x79BB;&#x8868;&#x793A;&#x3002;&#x7136;&#x800C;&#x5BF9;&#x4E8E;&#x5411;&#x91CF;&#x5316;&#x7684;&#x6587;&#x672C;&#x548C;&#x56FE;&#x7247;&#xFF0C;&#x6709;&#x65F6;&#x6B27;&#x5F0F;&#x8DDD;&#x79BB;&#x5E76;&#x4E0D;&#x80FD;&#x6B63;&#x786E;&#x8861;&#x91CF;&#x76F8;&#x4F3C;&#x5EA6;&#x7684;&#x5927;&#x5C0F;&#xFF0C;&#x6240;&#x4EE5;&#x6839;&#x636E;&#x5177;&#x4F53;&#x95EE;&#x9898;&#xFF0C;&#x8DDD;&#x79BB;&#x4E5F;&#x4F1A;&#x91C7;&#x7528;&#x4F59;&#x5F26;&#x8DDD;&#x79BB;&#x3001;&#x6D77;&#x660E;&#x8DDD;&#x79BB;&#x3001;&#x7F16;&#x8F91;&#x8DDD;&#x79BB;&#x7B49;&#x7B49;&#x3002;</p>
+<h3 id="k&#x7684;&#x9009;&#x53D6;">k&#x7684;&#x9009;&#x53D6;</h3><p>&#x5BB9;&#x6613;&#x7406;&#x89E3;&#xFF0C;&#x5F53;k&#x592A;&#x5C0F;&#xFF0C;&#x5206;&#x7C7B;&#x7ED3;&#x679C;&#x6613;&#x53D7;&#x566A;&#x58F0;&#x70B9;&#x5F71;&#x54CD;&#xFF1B;k&#x592A;&#x5927;&#xFF0C;&#x8FD1;&#x90BB;&#x4E2D;&#x53C8;&#x53EF;&#x80FD;&#x5305;&#x542B;&#x592A;&#x591A;&#x7684;&#x5176;&#x5B83;&#x7C7B;&#x522B;&#x7684;&#x70B9;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/bf096b63f6246b60f20ccd5aebf81a4c510fa29a.jpg" alt="kNN"></p>
+<p>&#x5982;&#x56FE;&#xFF0C;k=3&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x672A;&#x77E5;&#x6837;&#x672C;&#x7684;&#x7C7B;&#x522B;&#x88AB;&#x5224;&#x65AD;&#x6210;&#x7EA2;&#x8272;&#x4E09;&#x89D2;&#xFF0C;k=5&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5206;&#x7C7B;&#x7ED3;&#x679C;&#x5219;&#x662F;&#x84DD;&#x8272;&#x65B9;&#x5757;&#xFF0C;&#x8FD9;&#x4E2A;&#x4F8B;&#x5B50;&#x8BF4;&#x660E;&#x4E86;k&#x7684;&#x53D6;&#x503C;&#x5BF9;&#x5206;&#x7C7B;&#x7ED3;&#x679C;&#x662F;&#x6709;&#x5F71;&#x54CD;&#x7684;&#x3002;</p>
+<p>&#x901A;&#x5E38;&#x901A;&#x8FC7;cross validation&#x6765;&#x8FDB;&#x884C;k&#x7684;&#x9009;&#x53D6;&#xFF0C;&#x4ECE;k=1&#x5F00;&#x59CB;&#x8FDB;&#x884C;&#x4EA4;&#x53C9;&#x6821;&#x9A8C;&#xFF0C;&#x76F4;&#x5230;k=n&#xFF0C;&#x53D6;&#x80FD;&#x4F7F;&#x4EA4;&#x53C9;&#x6821;&#x9A8C;&#x5F97;&#x5230;&#x6700;&#x597D;&#x7684;&#x7ED3;&#x679C;&#x7684;k&#x3002;</p>
+<p>&#x7ECF;&#x9A8C;&#x4E0A;&#xFF0C;&#x901A;&#x5E38;k&#x5C0F;&#x4E8E;&#x6570;&#x636E;&#x96C6;&#x7684;&#x5E73;&#x65B9;&#x6839;&#x3002;</p>
+<h3 id="knn&#x7684;&#x4F18;&#x70B9;">kNN&#x7684;&#x4F18;&#x70B9;</h3><p>kNN&#x7684;&#x4F18;&#x70B9;&#x6709;&#x5F88;&#x591A;&#xFF0C;&#x6700;&#x5927;&#x7684;&#x4F18;&#x70B9;&#x6211;&#x8BA4;&#x4E3A;&#x8FD8;&#x662F;&#x7B80;&#x5355;&#x3002;</p>
+<ul>
+<li>&#x7B80;&#x5355;</li>
+<li>&#x5BB9;&#x6613;&#x5B9E;&#x73B0;</li>
+<li>&#x652F;&#x6301;&#x591A;&#x5206;&#x7C7B;</li>
+<li>&#x65E0;&#x9700;&#x8BAD;&#x7EC3;&#xFF0C;training set&#x62FF;&#x6765;&#x5C31;&#x7528;</li>
+</ul>
+<h3 id="knn&#x7684;&#x7F3A;&#x70B9;">kNN&#x7684;&#x7F3A;&#x70B9;</h3><p>kNN&#x540C;&#x6837;&#x6709;&#x5F88;&#x591A;&#x7F3A;&#x70B9;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ&#x622A;&#x56FE;20151211050058.jpg" alt="kNN"></p>
+<ul>
+<li>&#x5BF9;&#x8BAD;&#x7EC3;&#x96C6;&#x8981;&#x6C42;&#x82DB;&#x523B;&#xFF0C;kNN&#x8981;&#x6C42;&#x8BAD;&#x7EC3;&#x96C6;&#x4E0D;&#x540C;&#x7C7B;&#x522B;&#x7684;&#x6570;&#x636E;&#x4E0D;&#x80FD;&#x76F8;&#x5DEE;&#x592A;&#x591A;&#xFF0C;&#x5BF9;&#x4E0A;&#x56FE;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x53EF;&#x4EE5;&#x9884;&#x89C1;&#xFF0C;&#x56E0;&#x4E3A;&#x6837;&#x672C;&#x8FC7;&#x5C11;&#x5F88;&#x6709;&#x53EF;&#x80FD;&#x5F88;&#x5C11;&#x6709;&#x6570;&#x636E;&#x88AB;&#x5206;&#x7C7B;&#x6210;&#x84DD;&#x8272;&#x5706;&#x5708;&#x2014;-&#x5373;&#x4F7F;&#x5B83;&#x53EF;&#x80FD;&#x771F;&#x7684;&#x662F;&#x84DD;&#x8272;&#x5706;&#x5708;</li>
+<li>&#x8BA1;&#x7B97;&#x91CF;&#x5927;&#x3002;&#x6162;&#x662F;kNN&#x7684;&#x81F4;&#x547D;&#x4F24;&#xFF0C;&#x6BCF;&#x4E00;&#x6B21;&#x90FD;&#x8981;&#x8BA1;&#x7B97;&#x672A;&#x77E5;&#x6570;&#x636E;&#x548C;&#x6240;&#x6709;&#x8BAD;&#x7EC3;&#x96C6;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x5F53;&#x8BAD;&#x7EC3;&#x96C6;&#x975E;&#x5E38;&#x5927;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8FD9;&#x4F1A;&#x53D8;&#x5F97;&#x5F88;&#x6162;&#xFF1B;&#x800C;&#x8BAD;&#x7EC3;&#x96C6;&#x5C0F;&#x7684;&#x8BDD;&#xFF0C;&#x53C8;&#x4F1A;&#x663E;&#x5F97;&#x7CBE;&#x786E;&#x5EA6;&#x4E0D;&#x591F;&#x3002;</li>
+<li>&#x592A;&#x7B80;&#x5355;&#xFF0C;&#x4EE5;&#x81F3;&#x4E8E;&#x51E0;&#x4E4E;&#x6CA1;&#x6709;&#x4EC0;&#x4E48;&#x4F18;&#x5316;&#x7684;&#x7A7A;&#x95F4;&#x3002;</li>
+</ul>
+<h3 id="knn-tricks">kNN tricks</h3><p>kNN&#x867D;&#x7136;&#x7B80;&#x5355;&#xFF0C;&#x4E5F;&#x6CA1;&#x5565;&#x597D;&#x4F18;&#x5316;&#x7684;&#xFF0C;&#x5176;&#x4ECD;&#x7136;&#x6709;&#x4E0D;&#x5C11;tricks&#x80FD;&#x591F;&#x6216;&#x591A;&#x6216;&#x5C11;&#x63D0;&#x4F9B;&#x51C6;&#x786E;&#x7387;&#x7684;&#x63D0;&#x5347;&#x3002;</p>
+<h4 id="normalization">Normalization</h4><p>&#x5F53;&#x6837;&#x672C;&#x70B9;&#x5411;&#x91CF;&#x7684;&#x67D0;&#x4E00;&#x4E2A;&#x7EF4;&#x5EA6;&#x8303;&#x56F4;&#xFF08;scale&#xFF09;&#x975E;&#x5E38;&#x5927;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x5BF9;&#x7EF4;&#x5EA6;&#x8FDB;&#x884C;normalization&#x5F52;&#x4E00;&#x53EF;&#x80FD;&#x4F1A;&#x5BF9;&#x7ED3;&#x679C;&#x6709;&#x597D;&#x5904;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20151211051212.jpg" alt="kNN"></p>
+<p>&#x5982;&#x56FE;&#xFF0C;&#x73B0;&#x5728;&#x6709;&#x4E24;&#x4E2A;&#x5206;&#x7C7B;&#x4F46;&#x662F;x&#x8F74;&#x4E0A;&#x7684;scale&#x975E;&#x5E38;&#x5927;&#xFF0C;y&#x8F74;&#x7684;scale&#x975E;&#x5E38;&#x5C0F;&#xFF0C;&#x5C3D;&#x7BA1;&#x4E24;&#x4E2A;&#x5206;&#x7C7B;&#x6709;&#x7740;&#x8089;&#x773C;&#x53EF;&#x89C1;&#x7684;&#x660E;&#x663E;&#x7684;&#x754C;&#x9650;&#xFF0C;&#x4F7F;&#x7528;kNN&#x65F6;&#x7ED3;&#x679C;&#x8FD8;&#x662F;&#x4F1A;&#x53D8;&#x5F97;&#x975E;&#x5E38;&#x96BE;&#x582A;&#xFF0C;&#x56E0;&#x4E3A;x&#x8F74;&#x7684;scale&#x592A;&#x5927;&#xFF0C;&#x5176;&#x5728;&#x8BA1;&#x7B97;&#x8DDD;&#x79BB;&#x65F6;&#x7684;&#x8D21;&#x732E;&#x8FC7;&#x4E8E;&#x5927;&#x4E86;&#xFF0C;&#x6240;&#x4EE5;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x5BF9;&#x7EF4;&#x5EA6;&#x7684;scale&#x8FDB;&#x884C;&#x653E;&#x7F29;&#xFF0C;&#x5373;&#x6240;&#x8C13;normalization&#xFF0C;&#x4F7F;x&#x548C;y&#x90FD;&#x5728;[0,1]&#x7684;&#x533A;&#x95F4;&#x5185;&#xFF0C;&#x8FD9;&#x6837;&#xFF0C;&#x6837;&#x672C;&#x7684;&#x7A7A;&#x95F4;&#x5206;&#x5E03;&#x5C31;&#x662F;&#x4E00;&#x4E2A;&#x6B63;&#x65B9;&#x5F62;&#xFF08;&#x5728;&#x8FD9;&#x4E2A;&#x4F8B;&#x5B50;&#x4E2D;&#xFF09;&#xFF0C;&#x6CA1;&#x6709;&#x54EA;&#x4E00;&#x4E2A;&#x5750;&#x6807;&#x7684;&#x8D21;&#x732E;&#x5BF9;&#x8DDD;&#x79BB;&#x8FC7;&#x5927;&#x4E86;&#xFF0C;&#x5982;&#x56FE;&#xFF0C;&#x663E;&#x7136;normalization&#x4E4B;&#x540E;&#x7ED3;&#x679C;&#x4F1A;&#x66F4;&#x559C;&#x4EBA;&#x4E00;&#x70B9;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ&#x622A;&#x56FE;2015121105134.jpg" alt="kNN"></p>
+<h4 id="knn&#x52A0;&#x6743;">kNN&#x52A0;&#x6743;</h4><p>&#x5C3D;&#x7BA1;&#x76EE;&#x524D;&#x7684;kNN&#x5BF9;&#x6240;&#x6709;&#x524D;k&#x4E2A;&#x6837;&#x672C;&#x70B9;&#x4E00;&#x89C6;&#x540C;&#x4EC1;&#xFF0C;&#x4F46;&#x662F;&#x6211;&#x4EEC;&#x53EF;&#x80FD;&#x4F1A;&#x60F3;&#x5230;&#x548C;&#x672A;&#x77E5;&#x6570;&#x636E;&#x975E;&#x5E38;&#x8FD1;&#x7684;&#x70B9;&#x53EF;&#x80FD;&#x540C;&#x7C7B;&#x522B;&#x7684;&#x6982;&#x7387;&#x975E;&#x5E38;&#x5927;&#xFF0C;&#x8DDD;&#x79BB;&#x8D8A;&#x8FDC;&#xFF0C;&#x540C;&#x7C7B;&#x522B;&#x7684;&#x6982;&#x7387;&#x5C31;&#x8D8A;&#x5C0F;&#xFF0C;&#x56E0;&#x6B64;&#xFF0C;&#x53EF;&#x4EE5;&#x6839;&#x636E;&#x8DDD;&#x79BB;&#x7684;&#x8FDC;&#x8FD1;&#x5BF9;&#x8FD9;k&#x4E2A;&#x70B9;&#x8FDB;&#x884C;&#x52A0;&#x6743;&#xFF0C;&#x5177;&#x4F53;&#x5982;&#x4F55;&#x52A0;&#x6743;&#xFF0C;&#x5C31;&#x4E0D;&#x5177;&#x4F53;&#x8BA8;&#x8BBA;&#x4E86;&#x3002;</p>
+<h2 id="knn&#x7684;&#x5B9E;&#x73B0;">kNN&#x7684;&#x5B9E;&#x73B0;</h2><p>&#x592A;&#x7B80;&#x5355;&#xFF0C;&#x4E0D;&#x8BF4;&#x4E5F;&#x7F62;&#xFF0C;&#x6709;&#x7A7A;&#x8865;&#x4E0A;&#x3002;</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag">#ML</a>
+          
+            <a href="/tags/Machine-Learning/" rel="tag">#Machine Learning</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/jieba分词学习笔记（三）/" rel="next" title="jieba分词学习笔记（三）">
+                <i class="fa fa-chevron-left"></i> jieba分词学习笔记（三）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Py-tricks-2-python中异常处理的陷阱/" rel="prev" title="Py tricks(2): python中异常处理的陷阱">
+                Py tricks(2): python中异常处理的陷阱 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="机器学习入门（二）：最简单的ML算法-kNN算法/"
+           data-title="机器学习入门（二）：最简单的ML算法--kNN算法" data-url="http://yoursite.com/机器学习入门（二）：最简单的ML算法-kNN算法/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="Peng Foo" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Peng Foo</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">full-stack就是实验室项目多的意思</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#knn-in-one-sentence"><span class="nav-number">1.</span> <span class="nav-text">kNN in one sentence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#knn简介"><span class="nav-number">2.</span> <span class="nav-text">kNN简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#knn"><span class="nav-number">3.</span> <span class="nav-text">kNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#距离的选择"><span class="nav-number">3.1.</span> <span class="nav-text">距离的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k的选取"><span class="nav-number">3.2.</span> <span class="nav-text">k的选取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#knn的优点"><span class="nav-number">3.3.</span> <span class="nav-text">kNN的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#knn的缺点"><span class="nav-number">3.4.</span> <span class="nav-text">kNN的缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#knn-tricks"><span class="nav-number">3.5.</span> <span class="nav-text">kNN tricks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#normalization"><span class="nav-number">3.5.1.</span> <span class="nav-text">Normalization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#knn加权"><span class="nav-number">3.5.2.</span> <span class="nav-text">kNN加权</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#knn的实现"><span class="nav-number">4.</span> <span class="nav-text">kNN的实现</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peng Foo</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"pengfoo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

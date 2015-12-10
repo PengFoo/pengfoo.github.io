@@ -43,7 +43,7 @@
 
 
 
-  <meta name="keywords" content="python,python tricks,pythonic," />
+  <meta name="keywords" content="python," />
 
 
 
@@ -59,16 +59,16 @@
 
 
 
-<meta name="description" content="&amp;#x56E0;&amp;#x4E3A;&amp;#x79CD;&amp;#x79CD;&amp;#x539F;&amp;#x56E0;&amp;#xFF0C;Python&amp;#x5E76;&amp;#x672A;&amp;#x63D0;&amp;#x4F9B;&amp;#x5982;C/C++/Java&amp;#x4E00;&amp;#x6837;&amp;#x7684;const&amp;#x4FEE;&amp;#x9970;&amp;#x7B26;&amp;#xFF0C;&amp;#x6362;&amp;#x8A00;&amp;#x4E4B;&amp;#x">
+<meta name="description" content="&amp;#x5751;&amp;#xFF0C;&amp;#x5F85;&amp;#x586B;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Py tricks(1): python实现不可修改的常量">
-<meta property="og:url" content="http://yoursite.com/Py_tricks_python实现不可修改的常量/index.html">
+<meta property="og:title" content="Py tricks(2): python中异常处理的陷阱">
+<meta property="og:url" content="http://yoursite.com/Py-tricks-2-python中异常处理的陷阱/index.html">
 <meta property="og:site_name" content="Peng Foo">
-<meta property="og:description" content="&amp;#x56E0;&amp;#x4E3A;&amp;#x79CD;&amp;#x79CD;&amp;#x539F;&amp;#x56E0;&amp;#xFF0C;Python&amp;#x5E76;&amp;#x672A;&amp;#x63D0;&amp;#x4F9B;&amp;#x5982;C/C++/Java&amp;#x4E00;&amp;#x6837;&amp;#x7684;const&amp;#x4FEE;&amp;#x9970;&amp;#x7B26;&amp;#xFF0C;&amp;#x6362;&amp;#x8A00;&amp;#x4E4B;&amp;#x">
-<meta property="og:updated_time" content="2015-11-25T15:16:27.232Z">
+<meta property="og:description" content="&amp;#x5751;&amp;#xFF0C;&amp;#x5F85;&amp;#x586B;">
+<meta property="og:updated_time" content="2015-12-10T21:33:18.213Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Py tricks(1): python实现不可修改的常量">
-<meta name="twitter:description" content="&amp;#x56E0;&amp;#x4E3A;&amp;#x79CD;&amp;#x79CD;&amp;#x539F;&amp;#x56E0;&amp;#xFF0C;Python&amp;#x5E76;&amp;#x672A;&amp;#x63D0;&amp;#x4F9B;&amp;#x5982;C/C++/Java&amp;#x4E00;&amp;#x6837;&amp;#x7684;const&amp;#x4FEE;&amp;#x9970;&amp;#x7B26;&amp;#xFF0C;&amp;#x6362;&amp;#x8A00;&amp;#x4E4B;&amp;#x">
+<meta name="twitter:title" content="Py tricks(2): python中异常处理的陷阱">
+<meta name="twitter:description" content="&amp;#x5751;&amp;#xFF0C;&amp;#x5F85;&amp;#x586B;">
 
 
 
@@ -80,7 +80,7 @@
   };
 </script>
 
-  <title> Py tricks(1): python实现不可修改的常量 | Peng Foo </title>
+  <title> Py tricks(2): python中异常处理的陷阱 | Peng Foo </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -206,7 +206,7 @@
             
             
               
-                Py tricks(1): python实现不可修改的常量
+                Py tricks(2): python中异常处理的陷阱
               
             
           </h1>
@@ -215,8 +215,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-25T22:28:00+08:00" content="2015-11-25">
-              2015-11-25
+            <time itemprop="dateCreated" datetime="2015-12-11T05:31:00+08:00" content="2015-12-11">
+              2015-12-11
             </time>
           </span>
 
@@ -241,8 +241,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/Py_tricks_python实现不可修改的常量/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="Py_tricks_python实现不可修改的常量/" itemprop="commentsCount"></span>
+                <a href="/Py-tricks-2-python中异常处理的陷阱/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="Py-tricks-2-python中异常处理的陷阱/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -261,28 +261,7 @@
       
 
       
-        <span itemprop="articleBody"><p>&#x56E0;&#x4E3A;&#x79CD;&#x79CD;&#x539F;&#x56E0;&#xFF0C;Python&#x5E76;&#x672A;&#x63D0;&#x4F9B;&#x5982;C/C++/Java&#x4E00;&#x6837;&#x7684;const&#x4FEE;&#x9970;&#x7B26;&#xFF0C;&#x6362;&#x8A00;&#x4E4B;&#xFF0C;python&#x4E2D;&#x6CA1;&#x6709;&#x5E38;&#x91CF;&#xFF0C;&#x81F3;&#x5C11;&#x622A;&#x6B62;2015&#x5E74;&#x5E74;&#x672B;&#xFF0C;&#x8FD8;&#x6CA1;&#x6709;&#x8FD9;&#x4E2A;&#x6253;&#x7B97;&#x3002;Python&#x7A0B;&#x5E8F;&#x4E00;&#x822C;&#x901A;&#x8FC7;&#x7EA6;&#x5B9A;&#x4FD7;&#x6210;&#x7684;&#x53D8;&#x91CF;&#x540D;&#x5168;&#x5927;&#x5199;&#x7684;&#x5F62;&#x5F0F;&#x6765;&#x8868;&#x793A;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x5E38;&#x91CF;&#xFF0C;&#x4F46;&#x662F;&#x8FD9;&#x7EC8;&#x7A76;&#x4E0D;&#x662F;&#x957F;&#x4E45;&#x4E4B;&#x8BA1;&#x3002;</p>
-<p>&#x5176;&#x5B9E;Python&#x53EF;&#x4EE5;&#x66F2;&#x7EBF;&#x6551;&#x56FD;&#x5B9E;&#x73B0;&#x5E38;&#x91CF;&#x3002;</p>
-<p>&#x5728;Python&#x7684;&#x9762;&#x5411;&#x5BF9;&#x8C61;&#x4E2D;&#xFF0C;<code>object.__setattr__()</code>&#x8FD9;&#x4E2A;built-in function&#x5728;&#x5BF9;&#x7C7B;&#x7684;&#x5C5E;&#x6027;&#x8D4B;&#x503C;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x81EA;&#x52A8;&#x8C03;&#x7528;&#x3002;&#x5176;&#x51FD;&#x6570;&#x539F;&#x578B;&#x4E3A;&#xFF1A;</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">object.__setattr__(self, name, value)</span><br></pre></td></tr></table></figure>
-<p>&#x5176;&#x4E2D;name&#x4E3A;&#x53D8;&#x91CF;&#x540D;&#xFF0C;value&#x4E3A;&#x53D8;&#x91CF;&#x503C;&#x3002;</p>
-<p>&#x800C;<code>object.__dict__</code>&#x5219;&#x4EE5;dict&#x7684;&#x5F62;&#x5F0F;&#x4FDD;&#x5B58;&#x4E86;object&#x5185;&#x6240;&#x6709;&#x53EF;&#x5199;&#x7684;&#x5C5E;&#x6027;&#xFF0C;key&#x4E3A;&#x53D8;&#x91CF;&#x540D;&#xFF0C;value&#x4E3A;&#x53D8;&#x91CF;&#x503C;&#x3002;</p>
-<p>&#x90A3;&#x4E48;&#x6211;&#x4EEC;&#x5C31;&#x6709;&#x53EF;&#x80FD;&#x901A;&#x8FC7;&#x5EFA;&#x7ACB;&#x4E00;&#x4E2A;const&#x7C7B;&#xFF0C;&#x5BF9;&#x5176;<code>object.__setattr__()</code>&#x65B9;&#x6CD5;&#x8FDB;&#x884C;overwrite&#xFF0C;&#x5728;&#x5BF9;&#x5C5E;&#x6027;&#x503C;&#x8FDB;&#x884C;&#x8D4B;&#x503C;&#x7684;&#x65F6;&#x5019;&#x5224;&#x65AD;&#xFF0C;&#x5982;&#x679C;&#x5C5E;&#x6027;&#x5B58;&#x5728;&#xFF0C;&#x5219;&#x8868;&#x793A;&#x8FD9;&#x662F;&#x5BF9;&#x5E38;&#x91CF;&#x7684;&#x91CD;&#x8D4B;&#x503C;&#x64CD;&#x4F5C;&#xFF0C;&#x4ECE;&#x800C;&#x629B;&#x51FA;&#x5F02;&#x5E38;&#xFF0C;&#x5982;&#x679C;&#x5C5E;&#x6027;&#x4E0D;&#x5B58;&#x5728;&#xFF0C;&#x5219;&#x8868;&#x793A;&#x662F;&#x65B0;&#x58F0;&#x660E;&#x4E86;&#x4E00;&#x4E2A;&#x5E38;&#x91CF;&#xFF0C;&#x53EF;&#x4EE5;&#x8FDB;&#x884C;&#x8D4B;&#x503C;&#x64CD;&#x4F5C;&#x3002;</p>
-<p>const.py &#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_const</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ConstError</span><span class="params">(TypeError)</span> :</span> <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setattr__</span><span class="params">(self, key, value)</span>:</span></span><br><span class="line">        <span class="comment"># self.__dict__</span></span><br><span class="line">        <span class="keyword">if</span> self.__dict__.has_key(key):</span><br><span class="line">            <span class="keyword">raise</span> self.ConstError,<span class="string">&quot;constant reassignment error!&quot;</span></span><br><span class="line">        self.__dict__[key] = value</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">sys.modules[__name__] = _const()</span><br></pre></td></tr></table></figure></p>
-<p>&#x5176;&#x4E2D;&#xFF0C;1-10&#x884C;&#x662F;&#x4E0A;&#x8FF0;&#x601D;&#x8DEF;&#x7684;&#x7C7B;&#x7684;&#x4E00;&#x4E2A;&#x5B9E;&#x73B0;&#x3002;<br>&#x7B2C;12-14&#x884C;&#x7684;&#x5199;&#x6CD5;&#x503C;&#x5F97;&#x8BF4;&#x660E;&#x3002;&#x6211;&#x4EEC;&#x5C3D;&#x7BA1;&#x62E5;&#x6709;&#x4E86;_const&#x7C7B;&#xFF0C;&#x4F46;&#x662F;&#x6211;&#x4EEC;&#x5F53;&#x524D;&#x4F7F;&#x7528;&#x8FD9;&#x4E2A;&#x7C7B;&#x4ECD;&#x7136;&#x9700;&#x8981;<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> const</span><br><span class="line"></span><br><span class="line">c = const._const()</span><br><span class="line">c.TEST_CONSTANT = <span class="string">&apos;test&apos;</span></span><br></pre></td></tr></table></figure></p>
-<p>&#x8FD9;&#x6837;&#x7684;&#x5F62;&#x5F0F;&#x6765;&#x58F0;&#x660E;&#x4E00;&#x4E2A;&#x5E38;&#x91CF;TEST_CONSTANT&#xFF0C;&#x7136;&#x800C;&#x6211;&#x4EEC;&#x5E0C;&#x671B;&#x7528;&#x66F4;&#x7B80;&#x6D01;&#x7684;&#x65B9;&#x6CD5;&#x8FDB;&#x884C;&#x5E38;&#x91CF;&#x7684;&#x8D4B;&#x503C;&#x3002;&#x5F62;&#x5982;&#xFF1A;<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> const</span><br><span class="line"></span><br><span class="line">const.TEST_CONSTANT = <span class="string">&apos;test&apos;</span></span><br></pre></td></tr></table></figure></p>
-<p>&#x5728;python&#x4E2D;,<code>__name__</code>&#x5185;&#x7F6E;&#x5C5E;&#x6027;&#x662F;&#x5F53;&#x524D;&#x7684;class&#x6216;&#x8005;type&#x7684;&#x503C;&#x3002;&#x901A;&#x4FD7;&#x5730;&#x8BB2;&#xFF0C;<code>__name__</code>&#x7684;&#x503C;&#x6709;&#x4EE5;&#x4E0B;&#x4E24;&#x79CD;&#x5F62;&#x5F0F;&#xFF1A;</p>
-<ul>
-<li>&#x5982;&#x679C;&#x8FD0;&#x884C;&#x67D0;&#x4E00;&#x4E2A;py&#x6587;&#x4EF6;&#xFF0C;&#x5728;&#x8BE5;&#x6587;&#x4EF6;&#x4E2D;&#xFF0C;<code>__name__</code>&#x7684;&#x503C;&#x4E3A;<code>&apos;__main__&apos;</code></li>
-<li>&#x5982;&#x679C;import&#x4E86;&#x67D0;&#x4E00;&#x4E2A;py&#x6587;&#x4EF6;&#xFF0C;&#x90A3;&#x4E48;&#x5728;&#x8BE5;import&#x7684;&#x6587;&#x4EF6;&#x4E2D;&#xFF0C;<code>__name__</code>&#x7684;&#x503C;&#x4E3A;&#x8BE5;&#x6587;&#x4EF6;&#x7684;&#x6587;&#x4EF6;&#x540D;(&#x4E0D;&#x5E26;.py&#x540E;&#x7F00;)</li>
-</ul>
-<p>&#x800C;<code>sys.modules</code>&#x662F;&#x4E00;&#x4E2A;dict&#x5BF9;&#x8C61;&#xFF0C;&#x5305;&#x62EC;&#x4E86;&#x5F53;&#x524D;&#x4E0A;&#x4E0B;&#x6587;&#x4E2D;python&#x5DF2;&#x7ECF;load&#x7684;&#x6240;&#x6709;&#x6A21;&#x5757;&#x7684;&#x4FE1;&#x606F;&#xFF0C;dict&#x7684;key&#x4E3A;&#x6587;&#x4EF6;&#x540D;&#xFF0C;value&#x4E3A;&#x6A21;&#x5757;&#x5BF9;&#x8C61;&#x3002;</p>
-<p>&#x5728;const.py &#x4E2D;&#xFF0C;14&#x884C;&#x7684;&#x5199;&#x6CD5;&#x7B49;&#x4EF7;&#x4E8E;</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> const</span><br><span class="line"></span><br><span class="line">sys.modules[<span class="string">&apos;const&apos;</span>] = _const()</span><br></pre></td></tr></table></figure>
-<p>&#x5373;&#xFF0C;&#x8BA9;_const&#x7C7B;&#x4F5C;&#x4E3A;&#x6A21;&#x5757;&#x7684;&#x5165;&#x53E3;&#x70B9;&#xFF0C;&#x5F15;&#x5165;const.py&#x7B49;&#x4EF7;&#x4E8E;&#x58F0;&#x660E;&#x4E86;&#x4E00;&#x4E2A;_const&#x7C7B;&#x7684;&#x5B9E;&#x4F8B;&#x3002;</p>
-<p>&#x81F3;&#x6B64;python&#x7684;&#x5E38;&#x91CF;&#x5B9E;&#x73B0;&#x5B8C;&#x6BD5;&#xFF0C;&#x4F7F;&#x7528;test.py&#x6D4B;&#x8BD5;&#xFF1A;<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> const</span><br><span class="line"></span><br><span class="line">const.TEST = <span class="string">&apos;test&apos;</span></span><br><span class="line"><span class="keyword">print</span> const.TEST</span><br><span class="line">const.TEST1 = <span class="string">&apos;test1&apos;</span></span><br><span class="line"><span class="keyword">print</span> const.TEST1</span><br><span class="line">const.TEST = <span class="string">&apos;test&apos;</span></span><br><span class="line"><span class="keyword">print</span> const.TEST</span><br></pre></td></tr></table></figure></p>
-<p>&#x6253;&#x5370;&#x4FE1;&#x606F;&#x5982;&#x4E0B;&#xFF1A;<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">test</span></span><br><span class="line">test1</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  <span class="keyword">File</span> <span class="string">&quot;H:/code/test.py&quot;</span>, <span class="keyword">line</span> 9, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">const</span>.<span class="keyword">TEST</span> = &apos;<span class="keyword">test</span>&apos;</span><br><span class="line">  <span class="keyword">File</span> <span class="string">&quot;H:\code\const.py&quot;</span>, <span class="keyword">line</span> 9, <span class="keyword">in</span> __setattr__</span><br><span class="line">    raise self.ConstError,<span class="string">&quot;constant reassigning error!&quot;</span></span><br><span class="line"><span class="keyword">const</span>.ConstError: constant reassignment <span class="keyword">error</span>!</span><br></pre></td></tr></table></figure></p>
-<p>&#x6210;&#x529F;&#x4E3A;&#x4E24;&#x5E38;&#x91CF;&#x8D4B;&#x503C;&#xFF0C;&#x5728;&#x8BD5;&#x56FE;&#x4FEE;&#x6539;&#x7B2C;&#x4E00;&#x4E2A;&#x5E38;&#x91CF;&#x503C;&#x65F6;&#x629B;&#x51FA;&#x5F02;&#x5E38;:)</p>
+        <span itemprop="articleBody"><p>&#x5751;&#xFF0C;&#x5F85;&#x586B;</p>
 </span>
       
     </div>
@@ -293,10 +272,6 @@
           
             <a href="/tags/python/" rel="tag">#python</a>
           
-            <a href="/tags/python-tricks/" rel="tag">#python tricks</a>
-          
-            <a href="/tags/pythonic/" rel="tag">#pythonic</a>
-          
         </div>
       
 
@@ -304,17 +279,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/机器学习问题一览/" rel="next" title="机器学习入门（一）：机器学习问题一览">
-                <i class="fa fa-chevron-left"></i> 机器学习入门（一）：机器学习问题一览
+              <a href="/机器学习入门（二）：最简单的ML算法-kNN算法/" rel="next" title="机器学习入门（二）：最简单的ML算法--kNN算法">
+                <i class="fa fa-chevron-left"></i> 机器学习入门（二）：最简单的ML算法--kNN算法
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/jieba分词学习笔记（一）/" rel="prev" title="jieba分词学习笔记（一）">
-                jieba分词学习笔记（一） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -341,8 +312,8 @@
         
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="Py_tricks_python实现不可修改的常量/"
-           data-title="Py tricks(1): python实现不可修改的常量" data-url="http://yoursite.com/Py_tricks_python实现不可修改的常量/">
+      <div class="ds-thread" data-thread-key="Py-tricks-2-python中异常处理的陷阱/"
+           data-title="Py tricks(2): python中异常处理的陷阱" data-url="http://yoursite.com/Py-tricks-2-python中异常处理的陷阱/">
       </div>
     
   </div>
