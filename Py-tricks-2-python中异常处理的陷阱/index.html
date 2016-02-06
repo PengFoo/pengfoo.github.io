@@ -59,16 +59,40 @@
 
 
 
-<meta name="description" content="&amp;#x5751;&amp;#xFF0C;&amp;#x5F85;&amp;#x586B;">
+<meta name="description" content="&amp;lt;!-- toc --&amp;gt;
+
+python&amp;#x4E2D;&amp;#x7684;&amp;#x5F02;&amp;#x5E38;&amp;#x5904;&amp;#x7406;
+&amp;#x5F02;&amp;#x5E38;&amp;#x5904;&amp;#x7406;&amp;#x5B9E;&amp;#x9A8C;
+&amp;#x89E3;&amp;#x91CA;
+
+&amp;lt;!-- tocstop --&amp;gt;
+
+python&amp;#x4E2D;&amp;#x7684;&amp;#x5F02;&amp;#x5E38;&amp;#x5904;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Py tricks(2): python中异常处理的陷阱">
 <meta property="og:url" content="http://yoursite.com/Py-tricks-2-python中异常处理的陷阱/index.html">
 <meta property="og:site_name" content="Peng Foo">
-<meta property="og:description" content="&amp;#x5751;&amp;#xFF0C;&amp;#x5F85;&amp;#x586B;">
-<meta property="og:updated_time" content="2015-12-10T21:33:18.213Z">
+<meta property="og:description" content="&amp;lt;!-- toc --&amp;gt;
+
+python&amp;#x4E2D;&amp;#x7684;&amp;#x5F02;&amp;#x5E38;&amp;#x5904;&amp;#x7406;
+&amp;#x5F02;&amp;#x5E38;&amp;#x5904;&amp;#x7406;&amp;#x5B9E;&amp;#x9A8C;
+&amp;#x89E3;&amp;#x91CA;
+
+&amp;lt;!-- tocstop --&amp;gt;
+
+python&amp;#x4E2D;&amp;#x7684;&amp;#x5F02;&amp;#x5E38;&amp;#x5904;">
+<meta property="og:updated_time" content="2016-01-31T15:13:00.250Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Py tricks(2): python中异常处理的陷阱">
-<meta name="twitter:description" content="&amp;#x5751;&amp;#xFF0C;&amp;#x5F85;&amp;#x586B;">
+<meta name="twitter:description" content="&amp;lt;!-- toc --&amp;gt;
+
+python&amp;#x4E2D;&amp;#x7684;&amp;#x5F02;&amp;#x5E38;&amp;#x5904;&amp;#x7406;
+&amp;#x5F02;&amp;#x5E38;&amp;#x5904;&amp;#x7406;&amp;#x5B9E;&amp;#x9A8C;
+&amp;#x89E3;&amp;#x91CA;
+
+&amp;lt;!-- tocstop --&amp;gt;
+
+python&amp;#x4E2D;&amp;#x7684;&amp;#x5F02;&amp;#x5E38;&amp;#x5904;">
 
 
 
@@ -282,7 +306,24 @@ var _hmt = _hmt || [];
       
 
       
-        <span itemprop="articleBody"><p>&#x5751;&#xFF0C;&#x5F85;&#x586B;</p>
+        <span itemprop="articleBody"><!-- toc -->
+<ul>
+<li><a href="#python&#x4E2D;&#x7684;&#x5F02;&#x5E38;&#x5904;&#x7406;">python&#x4E2D;&#x7684;&#x5F02;&#x5E38;&#x5904;&#x7406;</a></li>
+<li><a href="#&#x5F02;&#x5E38;&#x5904;&#x7406;&#x5B9E;&#x9A8C;">&#x5F02;&#x5E38;&#x5904;&#x7406;&#x5B9E;&#x9A8C;</a></li>
+<li><a href="#&#x89E3;&#x91CA;">&#x89E3;&#x91CA;</a></li>
+</ul>
+<!-- tocstop -->
+<hr>
+<h2 id="python&#x4E2D;&#x7684;&#x5F02;&#x5E38;&#x5904;&#x7406;">python&#x4E2D;&#x7684;&#x5F02;&#x5E38;&#x5904;&#x7406;</h2><p>python&#x6709;&#x81EA;&#x5DF1;&#x7684;&#x5F02;&#x5E38;&#x7C7B;&#x548C;&#x5F02;&#x5E38;&#x5904;&#x7406;&#x673A;&#x5236;&#xFF0C;&#x5927;&#x6982;&#x957F;&#x8FD9;&#x4E2A;&#x6837;&#x5B50;&#xFF1A;<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment"># code block blablabla</span></span><br><span class="line"><span class="keyword">except</span> Exception, ex:</span><br><span class="line">    <span class="comment"># error handling code block blablabla</span></span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    <span class="comment"># final handling code block blablabla</span></span><br></pre></td></tr></table></figure></p>
+<p>&#x5176;&#x4E2D;<code>finally</code>code block&#x662F;&#x53EF;&#x9009;&#x7684;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x8BF4;&#x4EC5;&#x6709;<code>try</code>&#x548C;<code>except</code>&#x7684;&#x5F02;&#x5E38;&#x5904;&#x7406;&#x4E5F;&#x662F;&#x53EF;&#x4EE5;&#x7684;&#x3002;</p>
+<p>&#x5F88;&#x591A;&#x8BED;&#x8A00;&#x90FD;&#x8FD9;&#x6837;&#xFF0C;&#x53F8;&#x7A7A;&#x89C1;&#x60EF;&#xFF0C;&#x4E60;&#x4EE5;&#x4E3A;&#x5E38;&#x3002;&#x7136;&#x800C;&#x5728;python&#x4E2D;&#xFF0C;&#x4E0D;&#x662F;&#x8FD9;&#x4E48;&#x7B80;&#x5355;&#x3002;</p>
+<h2 id="&#x5F02;&#x5E38;&#x5904;&#x7406;&#x5B9E;&#x9A8C;">&#x5F02;&#x5E38;&#x5904;&#x7406;&#x5B9E;&#x9A8C;</h2><p>&#x4E0B;&#x9762;&#x7ED9;&#x51FA;&#x4E86;&#x4E24;&#x4E2A;&#x4E2A;&#x7B80;&#x5355;&#x7684;python&#x5F02;&#x5E38;&#x5904;&#x7406;&#x7684;&#x4F8B;&#x5B50;&#xFF0C;<code>testFunc()</code>&#x548C;<code>testFunc2()</code>&#x51FD;&#x6570;&#x5206;&#x522B;&#x662F;&#x4E00;&#x6BB5;&#x6709;finally&#x548C;&#x6CA1;&#x6709;finally&#x7684;&#x7A0B;&#x5E8F;&#x5B9E;&#x4F8B;&#x3002;&#x731C;&#x731C;&#x8FD0;&#x884C;&#x7ED3;&#x679C;&#x662F;&#x4EC0;&#x4E48;&#x6837;&#x5B50;&#x7684;&#xFF1F;</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">raiseException</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">raise</span> Exception(<span class="string">&quot;raising a Exception&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testFunc</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        raiseException()</span><br><span class="line">        <span class="comment"># blablabla</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;prog running ok&quot;</span></span><br><span class="line">    <span class="keyword">except</span> Exception, ex:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;prog running error&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">testFunc2</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        raiseException()</span><br><span class="line">        <span class="comment"># blablabla</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;prog running ok&quot;</span></span><br><span class="line">    <span class="keyword">except</span> Exception, ex:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;prog running error&quot;</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;prog running finished&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&apos;__main__&apos;</span>:</span><br><span class="line">    <span class="keyword">print</span> testFunc()</span><br><span class="line">    <span class="keyword">print</span> testFunc2()</span><br></pre></td></tr></table></figure>
+<p>&#x6309;&#x7167;&#x5176;&#x4ED6;&#x8BED;&#x8A00;&#x7684;&#x6027;&#x683C;&#xFF0C;&#x4E24;&#x4E2A;testFunc()&#x8F93;&#x51FA;&#x7ED3;&#x679C;&#x5E94;&#x8BE5;&#x662F;&#x4E00;&#x6837;&#x7684;<code>prog running error</code>&#xFF0C;&#x4F46;&#x662F;Python&#x7684;&#x8F93;&#x51FA;&#x7ED3;&#x679C;&#x662F;&#xFF1A;<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">prog <span class="property">running</span> <span class="keyword">error</span></span><br><span class="line">prog <span class="property">running</span> finished</span><br><span class="line"></span><br><span class="line">Process finished <span class="keyword">with</span> <span class="keyword">exit</span> code <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>&#x53EA;&#x6709;try&#x2026;except&#x2026;&#x7684;testFunc&#x8F93;&#x51FA;&#x4E86;prog running error&#xFF0C;&#x800C;&#x62E5;&#x6709;try&#x2026;except&#x2026;finally&#x2026;&#x7684;testFunc2&#x8F93;&#x51FA;&#x4E86;prog running finished&#x3002;</p>
+<h2 id="&#x89E3;&#x91CA;">&#x89E3;&#x91CA;</h2><p>python&#x7684;&#x5F02;&#x5E38;&#x5904;&#x7406;&#x673A;&#x5236;&#x4E0E;&#x5176;&#x4ED6;&#x8BED;&#x8A00;&#x4E0D;&#x540C;&#xFF0C;&#x5728;&#x5F02;&#x5E38;&#x5904;&#x7406;&#x4E2D;&#xFF0C;&#x5982;&#x679C;&#x5B58;&#x5728;finally&#x8BED;&#x53E5;&#xFF0C;python&#x8BA4;&#x4E3A;finally&#x8BED;&#x53E5;&#x662F;&#x5F02;&#x5E38;&#x5904;&#x7406;&#x7684;&#x4E00;&#x90E8;&#x5206;&#xFF0C;&#x5BF9;&#x4E8E;&#x5F02;&#x5E38;&#x7684;&#x5904;&#x7406;&#x8BED;&#x53E5;&#x5FC5;&#x987B;&#x6267;&#x884C;&#x5B8C;&#x6BD5;&#xFF0C;&#x90A3;&#x4E48;finally&#x4E2D;&#x7684;&#x8BED;&#x53E5;&#x5728;&#x7A0B;&#x5E8F;&#x80FD;&#x591F;&#x63A7;&#x5236;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#x4E00;&#x5B9A;&#x4F1A;&#x6267;&#x884C;&#xFF0C;&#x6240;&#x6709;try&#x548C;except&#x4E2D;&#x7684;&#x8BED;&#x53E5;&#x4F1A;&#x88AB;&#x6302;&#x8D77;&#x4E0D;&#x6267;&#x884C;&#xFF0C;&#x4ECE;&#x800C;&#x4FDD;&#x8BC1;finally&#x4E2D;&#x7684;&#x8BED;&#x53E5;&#x4F1A;&#x6267;&#x884C;&#x3002;</p>
+<p>&#x4E8E;&#x662F;&#x5C31;&#x51FA;&#x73B0;&#x4E86;&#x548C;&#x897F;&#x65B9;&#x7684;&#x90A3;&#x4E00;&#x5957;&#x622A;&#x7136;&#x4E0D;&#x540C;&#x7684;&#x8FD4;&#x56DE;&#x7ED3;&#x679C;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x8FD9;&#x4E2A;&#x95EE;&#x9898;&#xFF0C;python&#x5F15;&#x4EE5;&#x4E3A;&#x50B2;&#xFF0C;&#x8BA4;&#x4E3A;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;feature&#x3002;&#x6211;&#x4EEC;&#x5728;&#x5199;&#x4EE3;&#x7801;&#x4E2D;&#x8981;&#x6CE8;&#x610F;&#xFF0C;&#x5728;&#x6709;finally&#x7684;code block&#x4E2D;&#xFF0C;&#x8981;&#x628A;return &#x5199;&#x5728;finally&#x4E2D;&#x3002;</p>
 </span>
       
     </div>
@@ -307,6 +348,10 @@ var _hmt = _hmt || [];
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/机器学习入门（三）：线性回归-Linear-Regression/" rel="prev" title="机器学习入门（三）：线性回归--Linear Regression">
+                机器学习入门（三）：线性回归--Linear Regression <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -378,7 +423,7 @@ var _hmt = _hmt || [];
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -392,7 +437,7 @@ var _hmt = _hmt || [];
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -422,7 +467,7 @@ var _hmt = _hmt || [];
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#python中的异常处理"><span class="nav-number">1.</span> <span class="nav-text">python中的异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常处理实验"><span class="nav-number">2.</span> <span class="nav-text">异常处理实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释"><span class="nav-number">3.</span> <span class="nav-text">解释</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -441,7 +486,7 @@ var _hmt = _hmt || [];
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2015</span>
+  <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
     <i class="icon-next-heart fa fa-heart"></i>
   </span>
@@ -680,7 +725,31 @@ var _hmt = _hmt || [];
 
   
   
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
 
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+s
   
   
 

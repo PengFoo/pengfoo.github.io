@@ -1,0 +1,878 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="full-stack就是实验室项目多的意思" />
+
+
+
+
+  <meta name="keywords" content="Linear Regression,ML,Machine Learning,机器学习,线性回归," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;lt;!-- toc --&amp;gt;
+
+Linear Regression in one sentence
+&amp;#x673A;&amp;#x5668;&amp;#x5B66;&amp;#x4E60;&amp;#x4E2D;&amp;#x7684;&amp;#x7EBF;&amp;#x6027;&amp;#x56DE;&amp;#x5F52;
+Cost Function/Loss Function
+&amp;#x7EBF;&amp;#x6027;&amp;#x56DE;&amp;#x5F52;&amp;#x7684;cos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习入门（三）：线性回归--Linear Regression">
+<meta property="og:url" content="http://yoursite.com/机器学习入门（三）：线性回归-Linear-Regression/index.html">
+<meta property="og:site_name" content="Peng Foo">
+<meta property="og:description" content="&amp;lt;!-- toc --&amp;gt;
+
+Linear Regression in one sentence
+&amp;#x673A;&amp;#x5668;&amp;#x5B66;&amp;#x4E60;&amp;#x4E2D;&amp;#x7684;&amp;#x7EBF;&amp;#x6027;&amp;#x56DE;&amp;#x5F52;
+Cost Function/Loss Function
+&amp;#x7EBF;&amp;#x6027;&amp;#x56DE;&amp;#x5F52;&amp;#x7684;cos">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/3.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/cost_function.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/cf.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/rep.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206195927.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206200128.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206201833.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206205130.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206205138.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206205508.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206213442.jpg">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/gd.gif">
+<meta property="og:updated_time" content="2016-02-06T14:04:39.994Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="机器学习入门（三）：线性回归--Linear Regression">
+<meta name="twitter:description" content="&amp;lt;!-- toc --&amp;gt;
+
+Linear Regression in one sentence
+&amp;#x673A;&amp;#x5668;&amp;#x5B66;&amp;#x4E60;&amp;#x4E2D;&amp;#x7684;&amp;#x7EBF;&amp;#x6027;&amp;#x56DE;&amp;#x5F52;
+Cost Function/Loss Function
+&amp;#x7EBF;&amp;#x6027;&amp;#x56DE;&amp;#x5F52;&amp;#x7684;cos">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?17af893a912c84b39a9016a54ed087f5";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+  <title> 机器学习入门（三）：线性回归--Linear Regression | Peng Foo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?true";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Peng Foo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                机器学习入门（三）：线性回归--Linear Regression
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-01-31T23:16:00+08:00" content="2016-01-31">
+              2016-01-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/机器学习入门（三）：线性回归-Linear-Regression/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="机器学习入门（三）：线性回归-Linear-Regression/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><!-- toc -->
+<ul>
+<li><a href="#linear-regression-in-one-sentence">Linear Regression in one sentence</a></li>
+<li><a href="#&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4E2D;&#x7684;&#x7EBF;&#x6027;&#x56DE;&#x5F52;">&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4E2D;&#x7684;&#x7EBF;&#x6027;&#x56DE;&#x5F52;</a></li>
+<li><a href="#cost-functionloss-function">Cost Function/Loss Function</a><ul>
+<li><a href="#&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x7684;cost-function">&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x7684;cost function</a></li>
+<li><a href="#&#x5BF9;cost-function&#x7684;&#x89E3;&#x8BFB;">&#x5BF9;Cost Function&#x7684;&#x89E3;&#x8BFB;</a></li>
+</ul>
+</li>
+<li><a href="#&#x9636;&#x6BB5;&#x603B;&#x7ED3;">&#x9636;&#x6BB5;&#x603B;&#x7ED3;</a></li>
+<li><a href="#gradient-decent&#x68AF;&#x5EA6;&#x4E0B;&#x964D;">Gradient Decent&#xFF08;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#xFF09;</a><ul>
+<li><a href="#&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x4E24;&#x4E2A;&#x53C2;&#x6570;">&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x4E24;&#x4E2A;&#x53C2;&#x6570;</a><ul>
+<li><a href="#learning-rate&#x7684;&#x9009;&#x53D6;">learning rate&#x7684;&#x9009;&#x53D6;</a></li>
+<li><a href="#&#x7EC8;&#x6B62;&#x6761;&#x4EF6;">&#x7EC8;&#x6B62;&#x6761;&#x4EF6;</a></li>
+</ul>
+</li>
+<li><a href="#&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x66F4;&#x65B0;&#x53C2;&#x6570;&#x503C;">&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x66F4;&#x65B0;&#x53C2;&#x6570;&#x503C;</a></li>
+<li><a href="#batch-gradient-decent">Batch Gradient Decent</a></li>
+<li><a href="#linear-regression&#x7684;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;">Linear Regression&#x7684;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+<hr>
+<h2 id="linear-regression-in-one-sentence">Linear Regression in one sentence</h2><p>Linear Regression&#x7528;&#x4E8E;&#x62DF;&#x5408;&#x4E00;&#x6761;&#x7EBF;&#x6027;&#x76F4;&#x7EBF;&#xFF0C;&#x4F46;&#x4E0D;&#x80FD;&#x53EB;&#x5B83;LR&#xFF0C;&#x56E0;&#x4E3A;LR&#x88AB;&#x53E6;&#x4E00;&#x4E2A;&#x5E94;&#x7528;&#x66F4;&#x4E3A;&#x5E7F;&#x6CDB;&#x7684;Logistic Regression&#x62A2;&#x8D70;&#x4E86;&#x3002;</p>
+<p>&#x4E8B;&#x5B9E;&#x4E0A;&#x6709;&#x8BB8;&#x591A;&#x65B9;&#x6CD5;&#x80FD;&#x505A;&#x540C;&#x6837;&#x7684;&#x4E8B;&#x60C5;&#xFF0C;&#x6BD4;&#x5982;&#x9AD8;&#x4E2D;&#x5C31;&#x5B66;&#x8FC7;&#x7684;&#x6700;&#x5C0F;&#x4E8C;&#x4E58;&#x6CD5;&#x3002;&#x6BD4;&#x8D77;&#x4ED6;&#x4EEC;&#xFF0C;&#x8FD9;&#x4E00;&#x7BC7;&#x6587;&#x7AE0;&#x66F4;&#x5177;&#x73B0;&#x5B9E;&#x6027;&#x610F;&#x4E49;&#x7684;&#x5730;&#x65B9;&#x5728;&#x4E8E;&#xFF0C;&#x7528;&#x7B80;&#x5355;&#x7684;&#x4F8B;&#x5B50;&#x9610;&#x660E;&#x4E00;&#x4E9B;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x5E38;&#x89C1;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x6BD4;&#x5982;</p>
+<ul>
+<li>&#x4E00;&#x822C;&#x5F62;&#x5F0F;&#x7684;model representation</li>
+<li>&#x7528;cost function&#xFF08;&#x53C8;&#x79F0;loss function&#xFF09;&#x6765;&#x6807;&#x5B9A;&#x5047;&#x8BBE;&#x51FD;&#x6570;&#x7684;&#x597D;&#x574F;</li>
+<li>&#x7528;gradient decent&#xFF08;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#xFF0C;&#x6709;&#x65F6;&#x4F7F;&#x7528;gradient accent&#xFF0C;&#x68AF;&#x5EA6;&#x4E0A;&#x5347;&#xFF09;&#x6765;&#x5BFB;&#x627E;&#x5168;&#x5C40;/&#x5C40;&#x90E8;&#x6700;&#x4F18;&#x89E3;</li>
+<li>&#x7406;&#x89E3;supervised learning&#xFF08;&#x76D1;&#x7763;&#x5B66;&#x4E60;&#xFF09;&#x7684;&#x57FA;&#x672C;&#x5F62;&#x5F0F;</li>
+<li>feature scaling&#x5BF9;&#x5B66;&#x4E60;&#x901F;&#x7387;&#x7684;&#x5F71;&#x54CD;</li>
+<li>&#x2026;.</li>
+</ul>
+<h2 id="&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4E2D;&#x7684;&#x7EBF;&#x6027;&#x56DE;&#x5F52;">&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4E2D;&#x7684;&#x7EBF;&#x6027;&#x56DE;&#x5F52;</h2><p>&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x4E0D;&#x662F;&#x4E00;&#x4E2A;&#x96BE;&#x7406;&#x89E3;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x5982;&#x4E0B;&#x56FE;&#xFF0C;&#x5C31;&#x662F;&#x4E00;&#x4E2A;&#x5178;&#x578B;&#x7684;&#x4E8C;&#x7EF4;&#x7684;&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x95EE;&#x9898;&#xFF0C;&#x5373;&#x4F7F;&#x63A8;&#x5E7F;&#x5230;&#x9AD8;&#x7EF4;&#xFF0C;&#x8FD9;&#x4E2A;&#x95EE;&#x9898;&#x4E5F;&#x662F;&#x4E0D;&#x96BE;&#x7406;&#x89E3;&#x7684;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/3.jpg" alt="&#x4E00;&#x4E2A;&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x6A21;&#x578B;&#x7684;&#x793A;&#x610F;&#x56FE;"></p>
+<p>&#x4E0D;&#x8FC7;&#x5728;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x95EE;&#x9898;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x6709;&#x4E00;&#x4E9B;&#x7EA6;&#x5B9A;&#x7684;&#x79F0;&#x547C;&#x548C;&#x60EF;&#x7528;&#x8BED;&#xFF1A;</p>
+<table>
+<thead>
+<tr>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&#x81EA;&#x53D8;&#x91CF;</td>
+<td>&#x7279;&#x5F81; (feature)</td>
+</tr>
+<tr>
+<td>&#x89E3;&#x6790;&#x5F0F; &#x3000;$f(x)$&#x3000;</td>
+<td>Hypothesis &#x3000;$h(x)$&#x3000;</td>
+</tr>
+<tr>
+<td>&#x7CFB;&#x6570;</td>
+<td>&#x53C2;&#x6570; (parameter)&#x6216;&#x6743;&#x91CD;(weight)</td>
+</tr>
+</tbody>
+</table>
+<p>&#x5728;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4E2D;&#xFF0C;&#x901A;&#x5E38;&#x628A;&#x81EA;&#x53D8;&#x91CF;&#x53EB;&#x505A;&#x7279;&#x5F81;&#xFF0C;&#x5BF9;&#x4E8E;&#x591A;&#x4E2A;&#x81EA;&#x53D8;&#x91CF;&#xFF0C;&#x5373;&#x591A;&#x4E2A;&#x7279;&#x5F81;&#xFF0C;&#x901A;&#x5E38;&#x7528;&#x4E00;&#x4E2A;&#x7279;&#x5F81;&#x5411;&#x91CF;&#x3000;$x = (x_1,x_2,\ldots,x_n)$&#x3000;&#x8868;&#x793A;&#x7279;&#x5F81;&#x4EEC;&#x3002;</p>
+<p>&#x5728;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4E2D;&#xFF0C;&#x901A;&#x5E38;&#x628A;&#x56DE;&#x5F52;&#x65B9;&#x7A0B;&#xFF08; &#x8FD9;&#x91CC;&#x4EE5;&#x4E00;&#x4E2A;<code>&#x4E8C;&#x5143;&#x4E00;&#x6B21;&#x65B9;&#x7A0B;</code>&#x4E3A;&#x4F8B;&#xFF09;&#x3000;$y = a_1x_1 + a_2x_2 + b$&#x3000;&#x7684;&#x7CFB;&#x6570;&#x548C;&#x622A;&#x8DDD;&#x3000;$(a_1,a_2,b)$&#x3000;&#x7ED3;&#x5408;&#x8D77;&#x6765;&#xFF0C;&#x53EB;&#x505A;&#x53C2;&#x6570;&#x6216;&#x6743;&#x91CD;&#xFF0C;&#x7ECF;&#x5E38;&#x3000;&#x7528;$\theta$&#x3000;&#x6216;$&#x3000;w$&#x8868;&#x793A;&#xFF0C;&#x53C2;&#x6570;&#x6216;&#x6743;&#x91CD;&#x4E5F;&#x662F;&#x4E00;&#x4E2A;&#x5411;&#x91CF;&#x3002;&#x7279;&#x522B;&#x5730;&#xFF0C;&#x5728;&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x7B49;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;&#x622A;&#x8DDD;b&#x4E5F;&#x4F1A;&#x5355;&#x72EC;&#x62FF;&#x51FA;&#x6765;&#xFF0C;&#x6B64;&#x65F6;&#x622A;&#x8DDD;&#x53EB;&#x505A;&#x504F;&#x7F6E;(bias)&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;&#x5DF2;&#x77E5;&#x7684;&#x7528;&#x6765;&#x8FDB;&#x884C;&#x56DE;&#x5F52;&#x7684;&#x6570;&#x636E;&#x7684;&#x96C6;&#x5408;&#xFF0C;&#x5728;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x4E2D;&#x7EDF;&#x4E00;&#x79F0;&#x4E3A;&#x8BAD;&#x7EC3;&#x96C6;&#xFF08;training set&#xFF09;&#xFF0C;&#x6700;&#x7EC8;&#x5F97;&#x5230;&#x7684;&#x89E3;&#x6790;&#x5F0F;&#x901A;&#x5E38;&#x7528;&#x7B26;&#x53F7;&#x3000;$h_\theta(x)$&#x3000;    &#x8868;&#x793A;&#xFF0C;&#x53EB;&#x505A;&#x4EE5;&#x7528; &#x3000;$\theta$&#x3000;&#x4E3A;&#x53C2;&#x6570;&#x7684;&#x6A21;&#x578B;&#x7684;hypothesis&#xFF08;&#x5047;&#x8BF4;&#xFF09;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;<code>&#x4E00;&#x5143;&#x7EBF;&#x6027;&#x56DE;&#x5F52;</code>&#xFF0C;&#x5176;&#x3000;$h_\theta(x)$&#x3000;    &#x7684;&#x5F62;&#x5F0F;&#x53EF;&#x80FD;&#x5982;&#x4E0B;&#xFF1A;<br>$$h_\theta(x) = \theta_0 + \theta_1x $$<br>&#x5176;&#x4E2D;&#xFF0C;$\theta_0$,$\theta_1$&#x662F;&#x53C2;&#x6570;&#x5411;&#x91CF;&#x7684;&#x4E24;&#x4E2A;&#x5206;&#x91CF;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x8FFD;&#x6C42;&#x66F4;&#x7F8E;&#x548C;&#x66F4;&#x6613;&#x4E8E;&#x8BA1;&#x7B97;&#x7684;&#x8868;&#x73B0;&#x5F62;&#x5F0F;&#xFF0C;&#x6709;&#x65F6;&#x6211;&#x4EEC;&#x4F1A;&#x4E3A;&#x5E38;&#x6570;&#x9879;bias&#x52A0;&#x4E00;&#x4E2A;&#x503C;&#x6052;&#x4E3A;1&#x7684;$x_0$&#xFF0C;&#x7136;&#x540E;&#x628A;$x_0$&#x5E76;&#x5165;x&#x7279;&#x5F81;&#x5411;&#x91CF;&#x4E2D;&#xFF0C;&#x6B64;&#x65F6;&#x7279;&#x5F81;&#x5411;&#x91CF;&#x53D8;&#x4E3A;$x = (x_0,x_1,x_2,\ldots,x_n)$&#xFF0C;&#x6B64;&#x65F6;&#x3000;$h_\theta(x)$&#x3000;&#x53D8;&#x5F97;&#x66F4;&#x7F8E;&#xFF1A;</p>
+<p>$$h_\theta(x) = \theta x $$</p>
+<blockquote>
+<p>&#x7C7B;&#x4F3C;&#x8FD9;&#x6837;&#x7B80;&#x5316;&#x516C;&#x5F0F;&#x8868;&#x73B0;&#x5F62;&#x5F0F;&#x7684;trick&#x5728;&#x5176;&#x4ED6;&#x6A21;&#x578B;&#x7684;representation&#x4E5F;&#x7ECF;&#x5E38;&#x4F1A;&#x78B0;&#x5230;&#xFF0C;&#x5B83;&#x4E0D;&#x4EC5;&#x4EC5;&#x8BA9;&#x8868;&#x73B0;&#x5F62;&#x5F0F;&#x53D8;&#x5F97;&#x66F4;&#x7F8E;&#xFF0C; &#x4E5F;&#x8BA9;&#x8BA1;&#x7B97;&#x53D8;&#x5F97;&#x66F4;&#x7B80;&#x6D01;&#x3002;</p>
+</blockquote>
+<h2 id="cost-functionloss-function">Cost Function/Loss Function</h2><p>&#x5BF9;&#x4E8E;&#x4E00;&#x4E2A;&#x5DF2;&#x6709;&#x7684;hypothesis&#xFF0C;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x6709;&#x65B9;&#x6CD5;&#x6765;&#x5BF9;&#x5047;&#x8BF4;&#x8FDB;&#x884C;&#x8BC4;&#x4F30;&#xFF0C;&#x6765;&#x5224;&#x65AD;&#x5047;&#x8BF4;&#x7684;&#x597D;&#x574F;&#xFF0C;cost function&#x4E5F;&#x53EB;&#x4F5C;loss function&#xFF0C;&#x5C31;&#x662F;&#x5BF9;&#x5047;&#x8BF4;&#x8FDB;&#x884C;&#x8BC4;&#x4F30;&#x7684;&#x4E00;&#x4E2A;&#x51FD;&#x6570;&#x3002;&#x901A;&#x5E38;&#x6765;&#x8BF4;&#xFF0C;&#x6A21;&#x578B;&#x8D8A;&#x51C6;&#x786E;&#xFF0C;&#x8D8A;&#x63A5;&#x8FD1;&#x771F;&#x5B9E;&#xFF0C;&#x5176;cost function&#x7684;&#x503C;&#x5C31;&#x8D8A;&#x5C0F;&#x3002;</p>
+<p>&#x5BF9;&#x4E8E;loss function&#xFF0C;&#x6709;&#x4E00;&#x7BC7;&#x6587;&#x7AE0;&#x5199;&#x7684;&#x8BDD;&#x5F88;&#x597D;&#x3002;<a href="http://eletva.com/tower/?p=186" target="_blank" rel="external">[machine learning] Loss Function view</a>&#xFF0C;&#x8FD9;&#x7BC7;&#x6587;&#x7AE0;&#x5BF9;loss function &#x5199;&#x5F97;&#x6BD4;&#x8F83;&#x5168;&#x9762;&#xFF0C;&#x770B;&#x4E0D;&#x61C2;&#x4E5F;&#x6CA1;&#x5173;&#x7CFB;&#xFF0C;&#x4E0D;&#x540C;&#x7684;loss function&#xFF0C;&#x6211;&#x4EEC;&#x5C06;&#x5728;&#x4E0D;&#x540C;&#x7684;&#x7B97;&#x6CD5;&#x548C;&#x6A21;&#x578B;&#x4E2D;&#x9047;&#x5230;&#xFF0C;loss function &#x901A;&#x5E38;&#x7528;&#x5927;&#x5199;&#x5B57;&#x6BCD;J&#x8868;&#x793A;&#xFF0C;&#x7531;&#x4E8E;loss function&#x7684;&#x5927;&#x5C0F;&#x548C;hypothesis&#x7684;&#x53C2;&#x6570;&#x53D6;&#x503C;&#x76F8;&#x5173;&#xFF0C;&#x4E0D;&#x96BE;&#x60F3;&#x8C61;&#xFF0C;J&#x662F;$\theta$&#x7684;&#x51FD;&#x6570;&#xFF0C;&#x7528;$J_\theta$&#x8868;&#x793A;&#x3002;</p>
+<h3 id="&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x7684;cost-function">&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x7684;cost function</h3><p>&#x5728;&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x95EE;&#x9898;&#x4E2D;&#xFF0C;&#x901A;&#x5E38;&#x4F7F;&#x7528;square loss&#x7684;&#x5F62;&#x5F0F;&#x3002;&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x5E38;&#x7528;&#x7684;square loss&#x5F62;&#x5F0F;&#x662F;&#x5747;&#x65B9;&#x8BEF;&#x5DEE;MSE&#xFF1A;</p>
+<p>$$ J_\theta = \frac{1}{m} \left( h_\theta (x^{(i)}) - y^{(i)} \right)^2 $$</p>
+<p>&#x8FD9;&#x91CC;x&#x548C;y&#x7684;&#x53F3;&#x4E0A;&#x89D2;&#x6807;i&#xFF0C;&#x8868;&#x793A;training set&#x4E2D;&#x7B2C;i&#x4E2A;&#x6570;&#x636E;&#x7684;&#x7279;&#x5F81;&#x5411;&#x91CF;&#x548C;&#x5B9E;&#x9645;&#x503C;&#xFF0C;&#x52A0;&#x62EC;&#x53F7;&#x8868;&#x793A;&#x662F;&#x7B2C;i&#x4E2A;&#xFF0C;&#x800C;&#x4E0D;&#x662F;i&#x6B21;&#x5E42;&#x3002;</p>
+<p>&#x901A;&#x5E38;&#xFF0C;&#x4E5F;&#x6709;&#x5982;&#x4E0B;&#x7684;&#x8868;&#x793A;&#x5F62;&#x5F0F;&#xFF1A;</p>
+<p>$$ J_\theta = \frac{1}{2m} \left( h_\theta (x^{(i)}) - y^{(i)} \right)^2 $$</p>
+<p>&#x8FD9;&#x6837;&#x505A;&#x662F;&#x65B9;&#x4FBF;&#x540E;&#x9762;&#x6C42;&#x504F;&#x5BFC;&#x6570;&#x7684;&#x65F6;&#x5019;&#x7EA6;&#x6389;&#x504F;&#x5BFC;&#x6570;&#x7CFB;&#x6570;&#x4E2D;&#x7684;2&#xFF0C;&#x66F4;&#x65B9;&#x4FBF;&#x8BA1;&#x7B97;&#x3002;</p>
+<p>&#x7531;loss function &#x53EF;&#x4EE5;&#x5F97;&#x77E5;&#xFF0C;&#x5F53;hypothesis &#x5BF9;training set&#x6D4B;&#x8BD5;&#x7ED3;&#x679C;&#x5B8C;&#x5168;&#x6B63;&#x786E;&#x7684;&#x65F6;&#x5019;&#xFF0C;loss function&#x7684;&#x503C;&#x662F;0&#x3002;</p>
+<p>&#x800C;&#x6211;&#x4EEC;&#x7684;&#x76EE;&#x6807;&#xFF0C;&#x5C31;&#x662F;&#x5C3D;&#x91CF;&#x4F18;&#x5316;hypothesis&#xFF0C;&#x4E0D;&#x65AD;&#x66F4;&#x6539;$\theta$&#x7684;&#x503C;&#xFF0C;&#x4F7F;&#x5F97;$J_\theta$&#x7684;&#x503C;&#x6700;&#x5C0F;&#xFF0C;&#x5373;</p>
+<p>$$ \mathop{Minimize}\limits_{\theta} J(\theta)$$</p>
+<h3 id="&#x5BF9;cost-function&#x7684;&#x89E3;&#x8BFB;">&#x5BF9;Cost Function&#x7684;&#x89E3;&#x8BFB;</h3><p>&#x81F3;&#x6B64;&#xFF0C;cost function&#x4ECD;&#x7A0D;&#x663E;&#x62BD;&#x8C61;&#xFF0C;&#x597D;&#x5728;Linear Regression&#x95EE;&#x9898;&#x7684;cost function &#x662F;&#x4E00;&#x4E2A;&#x4E8C;&#x6B21;&#x51FD;&#x6570;&#xFF0C;&#x56FE;&#x50CF;&#x662F;&#x597D;&#x753B;&#x7684;&#xFF0C;&#x6211;&#x4EEC;&#x5C1D;&#x8BD5;&#x4ECE;&#x56FE;&#x50CF;&#x7406;&#x89E3;cost function&#x548C;&#x5BF9;cost function &#x6C42;&#x89E3;&#x6743;&#x91CD;&#x5411;&#x91CF;&#x7684;&#x76EE;&#x6807;&#x3002;</p>
+<p>&#x4E0B;&#x9762;&#x6211;&#x4EEC;&#x4EE5;&#x4E00;&#x5143;&#x4E00;&#x6B21;&#x56DE;&#x5F52;&#x65B9;&#x7A0B;&#x7684;cost function $$ J_\theta = \frac{1}{2m} \left( h_\theta (x^{(i)}) - y^{(i)} \right)^2 $$&#x4E3A;&#x4F8B;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x6CE8;&#x610F;&#x5230;$J(\theta)$&#x662F;&#x4E00;&#x4E2A;&#x4E8C;&#x6B21;&#x51FD;&#x6570;&#xFF0C;cost function&#x6709;&#x4E24;&#x4E2A;&#x672A;&#x77E5;&#x6570;$\theta_0$&#x548C;$\theta_1$&#xFF0C;&#x56FA;&#x5B9A;&#x4E00;&#x4E2A;&#x53C2;&#xFF0C;$\theta_0$&#x65F6;&#xFF0C;$J(\theta)&#x662F;$\theta_1$&#x7684;&#x4E8C;&#x6B21;&#x51FD;&#x6570;&#xFF0C;&#x5176;&#x56FE;&#x50CF;&#x5E94;&#x8BE5;&#x662F;&#x4E00;&#x4E2A;&#x629B;&#x7269;&#x7EBF;&#x3002;&#x53EF;&#x80FD;&#x957F;&#x5F97;&#x5982;&#x4E0B;&#x56FE;&#x6240;&#x793A;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/cost_function.jpg" alt="cost function&#x4E00;&#x4E2A;&#x5206;&#x91CF;&#x7684;&#x56FE;&#x50CF;"></p>
+<p>&#x6CE8;&#x610F;&#x5230;&#x66F2;&#x7EBF;&#x7684;&#x5168;&#x5C40;&#x6781;&#x503C;&#x662F;&#x5927;&#x4E8E;&#x7B49;&#x4E8E;0&#x7684;&#xFF0C;&#x5F53;&#x4E14;&#x4EC5;&#x5F53;training set&#x80FD;&#x591F;&#x5B8C;&#x7F8E;&#x62DF;&#x5408;&#x6210;&#x4E00;&#x6761;&#x76F4;&#x7EBF;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x629B;&#x7269;&#x7EBF;&#x7684;&#x6781;&#x503C;&#x624D;&#x4F1A;&#x89E6;&#x5230;x&#x8F74;&#x4E0A;&#x3002;</p>
+<p>&#x7C7B;&#x4F3C;&#x7684;&#xFF0C;$J(\theta)$&#x548C;$\theta_0$&#x7684;&#x56FE;&#x50CF;&#x4E5F;&#x662F;&#x8FD9;&#x6837;&#x4E00;&#x6761;&#x629B;&#x7269;&#x7EBF;&#x66F2;&#x7EBF;&#x3002;</p>
+<p>&#x5982;&#x679C;&#x7EFC;&#x5408;&#x4E24;&#x4E2A;&#x53C2;&#x6570;$\theta_0$&#x548C;$\theta_1$&#xFF0C;&#x5176;&#x66F2;&#x7EBF;&#x53EF;&#x80FD;&#x957F;&#x8FD9;&#x4E2A;&#x6837;&#x5B50;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/cf.jpg" alt="cost function&#x7684;&#x56FE;&#x50CF;"></p>
+<p>&#x5176;&#x5168;&#x5C40;&#x6781;&#x503C;&#x70B9;&#x7684;&#x5750;&#x6807;&#xFF0C;&#x5C31;&#x662F;&#x6211;&#x4EEC;&#x8981;&#x6C42;&#x7684;&#x6743;&#x91CD;&#x5411;&#x91CF;$\theta$&#x3002;</p>
+<h2 id="&#x9636;&#x6BB5;&#x603B;&#x7ED3;">&#x9636;&#x6BB5;&#x603B;&#x7ED3;</h2><p>&#x5230;&#x73B0;&#x5728;&#x4E3A;&#x6B62;&#xFF0C;&#x6211;&#x4EEC;&#x5DF2;&#x7ECF;&#x628A;&#x4E00;&#x4E2A;&#x95EE;&#x9898;&#x62BD;&#x8C61;&#x6210;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x559C;&#x95FB;&#x4E50;&#x89C1;&#x7684;&#x5F62;&#x5F0F;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/rep.jpg" alt="Linear Regression&#x7684;&#x95EE;&#x9898;&#x63CF;&#x8FF0;"></p>
+<blockquote>
+<p>&#x4E00;&#x822C;&#x5730;&#xFF0C;&#x5BF9;&#x4E8E;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x95EE;&#x9898;&#xFF0C;&#x6211;&#x4EEC;&#x90FD;&#x8981;&#x8FD9;&#x6837;&#xFF0C;&#x786E;&#x5B9A;hypothesis&#xFF0C;cost function&#x548C;goal&#xFF0C;&#x901A;&#x5E38;&#x5BF9;cost function &#x6C42;&#x89E3;&#x6743;&#x91CD;&#x5411;&#x91CF;&#x7684;&#x8FC7;&#x7A0B;&#xFF0C;&#x662F;&#x4E00;&#x4E2A;&#x6700;&#x4F18;&#x5316;&#x95EE;&#x9898;&#x3002;</p>
+</blockquote>
+<h2 id="gradient-decent&#x68AF;&#x5EA6;&#x4E0B;&#x964D;">Gradient Decent&#xFF08;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#xFF09;</h2><p>&#x5BF9;&#x4E8E;&#x4E8C;&#x6B21;&#x51FD;&#x6570;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x7B80;&#x5355;&#x7684;&#x6C42;&#x504F;&#x5BFC;&#x6C42;&#x6781;&#x503C;&#x70B9;&#x6765;&#x8FDB;&#x884C;&#x6781;&#x503C;&#x7684;&#x6C42;&#x89E3;&#xFF0C;&#x4F46;&#x662F;&#x66F4;&#x591A;&#x65F6;&#x5019;&#xFF0C;&#x6211;&#x4EEC;&#x9047;&#x89C1;&#x7684;&#x60C5;&#x51B5;&#x5E76;&#x4E0D;&#x90A3;&#x4E48;&#x597D;&#x76F4;&#x63A5;&#x6C42;&#x51FA;&#x5168;&#x5C40;&#x6781;&#x503C;&#x7684;&#x4EE3;&#x6570;&#x89E3;&#xFF0C;&#x4E8E;&#x662F;&#x6211;&#x4EEC;&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x65B9;&#x5F0F;&#x6765;&#x8FDB;&#x884C;&#x5168;&#x5C40;&#x6781;&#x503C;&#x7684;&#x903C;&#x8FD1;&#x3002;&#xFF08;&#x5982;&#x679C;&#x662F;&#x6C42;&#x6781;&#x5927;&#x503C;&#xFF0C;&#x90A3;&#x4E48;&#x76F8;&#x5E94;&#x7684;&#x65B9;&#x6CD5;&#x5C31;&#x53EB;&#x505A;&#x68AF;&#x5EA6;&#x4E0A;&#x5347;&#xFF0C;gradient accent&#xFF09;</p>
+<p>&#x68AF;&#x5EA6;&#x5373;&#x51FD;&#x6570;&#x4E0B;&#x964D;&#x6700;&#x5FEB;&#x7684;&#x65B9;&#x5411;&#xFF0C;&#x5728;&#x6570;&#x503C;&#x4E0A;&#x7B49;&#x4E8E;&#x51FD;&#x6570;&#x5728;&#x8BE5;&#x70B9;&#x7684;&#x5BFC;&#x6570;&#x3002;&#x6CBF;&#x7740;&#x68AF;&#x5EA6;&#x65B9;&#x5411;&#x8D70;&#xFF0C;&#x603B;&#x80FD;&#x627E;&#x5230;&#x5C40;&#x90E8;&#x6781;&#x503C;&#xFF0C;&#x5982;&#x56FE;&#xFF0C;&#x662F;&#x4ECE;&#x51FD;&#x6570;&#x67D0;&#x4E00;&#x70B9;&#xFF0C;&#x6CBF;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206195927.jpg" alt="&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;"></p>
+<p>&#x4F46;&#x662F;gradient decent &#x6709;&#x4E00;&#x4E2A;&#x95EE;&#x9898;&#xFF0C;&#x6309;&#x7167;&#x68AF;&#x5EA6;&#x65B9;&#x5411;&#xFF0C;&#x53EA;&#x80FD;&#x627E;&#x5230;&#x76F8;&#x5E94;&#x7684;&#x5C40;&#x90E8;&#x6781;&#x503C;&#xFF0C;&#x5E76;&#x4E0D;&#x80FD;&#x786E;&#x5B9A;&#x627E;&#x5230;&#x7684;&#x5C40;&#x90E8;&#x6781;&#x503C;&#x5C31;&#x662F;&#x5168;&#x5C40;&#x6781;&#x503C;&#xFF0C;&#x800C;&#x4E14;&#x4ECE;&#x4E0D;&#x540C;&#x7684;&#x70B9;&#x51FA;&#x53D1;&#xFF0C;&#x6CBF;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x627E;&#x5230;&#x7684;&#x5C40;&#x90E8;&#x6781;&#x503C;&#x53EF;&#x80FD;&#x4E0D;&#x540C;&#x3002;&#x5982;&#x4E0B;&#x56FE;&#xFF0C;&#x4ECE;&#x4E24;&#x4E2A;&#x4E0D;&#x540C;&#x7684;&#x70B9;&#x51FA;&#x53D1;&#xFF0C;&#x6700;&#x7EC8;&#x6ED1;&#x5411;&#x4E0D;&#x540C;&#x7684;&#x6781;&#x503C;&#x70B9;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206200128.jpg" alt="&#x4E0D;&#x540C;&#x6781;&#x503C;&#x7684;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;"></p>
+<p>&#x8FD9;&#x4E00;&#x70B9;&#x65F6;&#x8981;&#x6CE8;&#x610F;&#x7684;&#xFF0C;&#x867D;&#x7136;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x5BF9;&#x4E8E;&#x4EFB;&#x610F;&#x53EF;&#x5BFC;&#x51FD;&#x6570;&#x90FD;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;&#xFF0C;&#x4F46;&#x662F;&#x53EF;&#x80FD;&#x5F97;&#x5230;&#x7684;&#x7ED3;&#x679C;&#x5E76;&#x4E0D;&#x5982;&#x4EBA;&#x610F;&#x662F;&#x5168;&#x5C40;&#x6781;&#x503C;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x80FD;&#x53EA;&#x80FD;&#x5F97;&#x5230;&#x5168;&#x5C40;&#x6781;&#x503C;&#x7684;&#x8FD1;&#x4F3C;&#x89E3;&#x3002;&#x8981;&#x4E00;&#x5B9A;&#x5F97;&#x5230;&#x5168;&#x5C40;&#x6700;&#x503C;&#xFF0C;&#x53EF;&#x4EE5;&#x8003;&#x8651;&#xFF1A;</p>
+<ul>
+<li>&#x5C06;&#x51FD;&#x6570;&#x8FD1;&#x4F3C;&#x6210;&#x51F8;&#x51FD;&#x6570;</li>
+<li>&#x5728;&#x80FD;&#x63A5;&#x53D7;&#x7684;&#x65F6;&#x95F4;&#x5185;&#x5728;&#x5C3D;&#x91CF;&#x5927;&#x7684;scale&#x5185;&#x591A;&#x53D6;&#x70B9;&#x8FDB;&#x884C;gradient decent</li>
+<li>&#x4F7F;&#x7528;&#x4E00;&#x4E9B;&#x65B9;&#x6CD5;&#x6765;&#x6982;&#x7387;&#x6027;&#x5730;&#x8DF3;&#x51FA;&#x5C40;&#x90E8;&#x6781;&#x503C;</li>
+</ul>
+<p>&#x4E0D;&#x8FC7;&#xFF0C;&#x8FD9;&#x4E9B;&#x4E0D;&#x5728;&#x4ECA;&#x5929;&#x7684;&#x8BA8;&#x8BBA;&#x8303;&#x56F4;&#x5185;&#x3002;</p>
+<h3 id="&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x4E24;&#x4E2A;&#x53C2;&#x6570;">&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x4E24;&#x4E2A;&#x53C2;&#x6570;</h3><p>&#x4E00;&#x822C;&#x5730;&#xFF0C;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x6709;&#x4E24;&#x4E2A;&#x95EE;&#x9898;&#x9700;&#x8981;&#x8003;&#x8651;&#xFF1A;</p>
+<ol>
+<li>&#x4E00;&#x6B21;&#x4E0B;&#x964D;&#x591A;&#x5C11;&#xFF1F;</li>
+<li>&#x5982;&#x4F55;&#x5B9A;&#x4E49;&#x4E0B;&#x964D;&#x505C;&#x6B62;&#x7684;&#x6761;&#x4EF6;&#xFF1F;</li>
+</ol>
+<p>&#x7B2C;&#x4E00;&#x4E2A;&#x95EE;&#x9898;&#x5728;gradient decent&#x4E2D;&#x53EB;&#x505A;&#x5B66;&#x4E60;&#x901F;&#x7387;&#xFF0C;learning rate&#x7684;&#x9009;&#x53D6;&#xFF0C;&#x7B2C;&#x4E8C;&#x4E2A;&#x95EE;&#x9898;&#x53EB;&#x505A;&#x7EC8;&#x6B62;&#x6761;&#x4EF6;&#x7684;&#x786E;&#x5B9A;&#x3002;</p>
+<h4 id="learning-rate&#x7684;&#x9009;&#x53D6;">learning rate&#x7684;&#x9009;&#x53D6;</h4><p>learning rate&#x4E0D;&#x5E94;&#x8BE5;&#x592A;&#x5927;&#xFF0C;&#x4E5F;&#x4E0D;&#x5E94;&#x8BE5;&#x592A;&#x5C0F;&#xFF0C;&#x5982;&#x56FE;&#x6240;&#x793A;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206201833.jpg" alt="&#x4E0D;&#x540C;&#x6781;&#x503C;&#x7684;&#x4E00;&#x4E2A;&#x4F8B;&#x5B50;"></p>
+<ul>
+<li>&#x5982;&#x679C;learning rate &#x592A;&#x5927;&#xFF0C;&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7684;&#x8FC7;&#x7A0B;&#x4F1A;&#x6765;&#x56DE;&#x9707;&#x8361;&#xFF0C;&#x4E0D;&#x80FD;&#x547D;&#x4E2D;&#x6781;&#x503C;&#x70B9;</li>
+<li>&#x5982;&#x679C;learning rate &#x592A;&#x5C0F;&#xFF0C;&#x6709;&#x4E24;&#x4E2A;&#x95EE;&#x9898;&#xFF1A;<ul>
+<li>&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x9677;&#x5728;&#x67D0;&#x4E00;&#x5C0F;&#x6BB5;&#x6781;&#x503C;&#x4E2D;&#x4E0D;&#x80FD;&#x8DF3;&#x51FA;</li>
+<li>&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x5230;&#x8FBE;&#x6781;&#x503C;&#x7684;&#x8FED;&#x4EE3;&#x6B21;&#x6570;&#x8FC7;&#x591A;&#xFF0C;&#x5B66;&#x4E60;&#x65F6;&#x95F4;&#x8FC7;&#x4E8E;&#x7F13;&#x6162;</li>
+</ul>
+</li>
+</ul>
+<p>&#x56E0;&#x6B64;tuning learning rate&#x662F;&#x673A;&#x5668;&#x5B66;&#x4E60;&#x95EE;&#x9898;&#x7ECF;&#x5E38;&#x8981;&#x9047;&#x5230;&#x7684;&#x95EE;&#x9898;&#x4E4B;&#x4E00;&#x3002;</p>
+<h4 id="&#x7EC8;&#x6B62;&#x6761;&#x4EF6;">&#x7EC8;&#x6B62;&#x6761;&#x4EF6;</h4><p>&#x4E00;&#x822C;&#x6765;&#x8BB2;&#xFF0C;&#x7EC8;&#x6B62;&#x6761;&#x4EF6;&#x53EF;&#x4EE5;&#x7EFC;&#x5408;&#x9009;&#x62E9;&#xFF1A;</p>
+<ul>
+<li>&#x6307;&#x5B9A;&#x6B21;&#x6570;&#xFF0C;&#x6BD4;&#x5982;&#x4E0A;&#x9650;100000&#x6B21;</li>
+<li>&#x76F8;&#x90BB;&#x4E24;&#x6B21;gradient decent&#x7684;&#x5DEE;&#x7684;&#x9608;&#x503C;</li>
+</ul>
+<h3 id="&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x66F4;&#x65B0;&#x53C2;&#x6570;&#x503C;">&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x66F4;&#x65B0;&#x53C2;&#x6570;&#x503C;</h3><p>&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x66F4;&#x65B0;&#x53C2;&#x6570;&#x503C;&#x4F7F;&#x7528;&#x5982;&#x4E0B;&#x7684;&#x6B65;&#x9AA4;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206205130.jpg" alt="&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x66F4;&#x65B0;&#x53C2;&#x6570;&#x503C;"></p>
+<p>&#x5176;&#x4E2D;&#x4E00;&#x6B21;&#x68AF;&#x5EA6;&#x66F4;&#x65B0;&#x8981;&#x6CE8;&#x610F;&#xFF0C;&#x9700;&#x8981;&#x540C;&#x65F6;&#x66F4;&#x65B0;&#x6240;&#x6709;&#x53C2;&#x6570;&#x7684;&#x503C;&#xFF0C;&#x800C;&#x4E0D;&#x80FD;&#x66F4;&#x65B0;&#x4E00;&#x4E2A;&#x4E4B;&#x540E;&#x518D;&#x66F4;&#x65B0;&#x53E6;&#x4E00;&#x4E2A;&#xFF0C;&#x4F1A;&#x8DD1;&#x504F;&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206205138.jpg" alt="&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x66F4;&#x65B0;&#x53C2;&#x6570;&#x503C;&#x7684;&#x6B63;&#x8BEF;&#x5BF9;&#x6BD4;"></p>
+<h3 id="batch-gradient-decent">Batch Gradient Decent</h3><p>&#x5728;&#x8FD9;&#x4E2A;case&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x4F7F;&#x7528;&#x7684;gradient decent&#x662F;&#x6BCF;&#x6B21;&#x505A;gradient decent&#x7684;&#x65F6;&#x5019;&#x90FD;&#x5229;&#x7528;&#x4E86;&#x6240;&#x6709;&#x7684;&#x6570;&#x636E;&#x70B9;&#x8FDB;&#x884C;cost function&#x7684;&#x504F;&#x5BFC;&#x6570;&#x7684;&#x8BA1;&#x7B97;&#xFF0C;&#x8FD9;&#x6837;&#x7684;gradient decent&#x53EB;&#x505A;batch gradient decent&#x3002;&#x5C3D;&#x7BA1;batch gradient decent&#x662F;&#x6700;&#x53EF;&#x9760;&#x7684;&#xFF0C;&#x4F46;&#x662F;&#x6570;&#x636E;&#x91CF;&#x5DE8;&#x5927;&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x663E;&#x5F97;&#x592A;&#x8017;&#x65F6;&#x95F4;&#x3002;</p>
+<p>&#x5728;&#x5176;&#x4ED6;&#x7684;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;&#x6211;&#x4EEC;&#x53EF;&#x80FD;&#x9047;&#x5230;&#x5176;&#x4ED6;&#x65B9;&#x6CD5;&#x8FDB;&#x884C;gradient decent&#xFF0C;&#x5982;&#x968F;&#x673A;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x7B49;&#xFF0C;&#x5728;&#x901F;&#x5EA6;&#x548C;&#x7CBE;&#x786E;&#x5EA6;&#x4E4B;&#x95F4;&#x8FDB;&#x884C;&#x4E86;&#x8861;&#x91CF;&#x548C;&#x59A5;&#x534F;&#x3002;</p>
+<h3 id="linear-regression&#x7684;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;">Linear Regression&#x7684;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;</h3><p>&#x5230;<code>&#x9636;&#x6BB5;&#x603B;&#x7ED3;</code>&#x7AE0;&#x8282;&#x4E3A;&#x6B62;&#xFF0C;&#x6211;&#x4EEC;&#x62BD;&#x8C61;&#x4E86;Linear Regression&#x7684;&#x6570;&#x5B66;&#x95EE;&#x9898;&#x8868;&#x8FBE;&#x5F62;&#x5F0F;&#x3001;&#x786E;&#x5B9A;&#x4E86;loss function&#x5E76;&#x786E;&#x5B9A;&#x4E86;&#x6700;&#x4F18;&#x5316;&#x76EE;&#x6807;&#xFF0C;&#x5728;&#x8FD9;&#x4E00;&#x7AE0;&#x8282;&#xFF0C;&#x6211;&#x4EEC;&#x6765;&#x8BA1;&#x7B97;&#x5982;&#x4F55;&#x4F7F;&#x7528;&#x68AF;&#x5EA6;&#x4E0B;&#x964D;&#x8FDB;&#x884C;Linear Regression&#x95EE;&#x9898;&#x7684;&#x6700;&#x4F18;&#x5316;&#x95EE;&#x9898;&#x6C42;&#x89E3;&#x3002;</p>
+<p>&#x81F3;&#x6B64;&#xFF0C;&#x6211;&#x4EEC;&#x62E5;&#x6709;&#x8FD9;&#x6837;&#x7684;&#x9636;&#x6BB5;&#x6027;&#x6210;&#x679C;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206205508.jpg" alt="&#x9636;&#x6BB5;&#x6027;&#x6210;&#x679C;"></p>
+<p>&#x5BF9;$j=0$&#x548C;$j=1$&#x7684;$\theta_j$&#x5206;&#x522B;&#x6C42;&#x504F;&#x5BFC;&#xFF0C;&#x6613;&#x5F97;&#xFF1A;<br>
+$$\frac {\partial} {\partial \theta_0} J(\theta_0,\theta_1) = \frac{1} {m} \sum_{i=1}^{m}\left( h_\theta(x^{(i)}) - y^{(i)}\right)$$
+
+$$\frac {\partial} {\partial \theta_1} J(\theta_0,\theta_1) = \frac{1} {m} \sum_{i=1}^{m}\left( h_\theta(x^{(i)}) - y^{(i)}\right)x^{(i)}$$
+
+</p>
+<p>&#x90A3;&#x4E48;&#xFF0C;&#x5BF9;&#x7EBF;&#x6027;&#x56DE;&#x5F52;&#x76F8;&#x5E94;&#x7684;gradient decent algorithm&#x5C31;&#x662F;&#x5982;&#x4E0B;&#x7684;&#xFF1A;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/QQ%E6%88%AA%E5%9B%BE20160206213442.jpg" alt="linear regression&#x7684;gradient decent"></p>
+<p>&#x800C;&#x5BF9;&#x4E8E;&#x521D;&#x59CB;&#x7684;$\theta_j$&#x7684;&#x503C;&#xFF0C;&#x6211;&#x4EEC;&#x901A;&#x5E38;&#x9009;&#x62E9;&#x968F;&#x673A;&#x9009;&#x53D6;&#x7684;&#x65B9;&#x5F0F;&#xFF0C;&#x53CD;&#x6B63;&#x65E0;&#x8BBA;&#x5982;&#x4F55;&#xFF0C;gradient decent&#x603B;&#x4F1A;&#x627E;&#x5230;&#x4E00;&#x4E2A;&#x5C40;&#x90E8;&#x6781;&#x503C;&#x7684;&#x3002;</p>
+<p>&#x4E0B;&#x56FE;&#x5C55;&#x793A;&#x4E86;gradient decent &#x5728;linear regression&#x4E2D;&#x53D1;&#x6325;&#x7684;&#x795E;&#x5947;&#x4F5C;&#x7528;&#xFF0C;&#x5DE6;&#x56FE;&#x662F;&#x53C2;&#x6570;&#x5BF9;&#x5E94;&#x7684;&#x51FD;&#x6570;&#x56FE;&#x50CF;&#xFF0C;&#x53F3;&#x56FE;&#x662F;cost function&#x7684;&#x7B49;&#x9AD8;&#x7EBF;&#x56FE;&#xFF0C;&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF0C;&#x5728;&#x968F;&#x673A;&#x7684;&#x9519;&#x8BEF;&#x79BB;&#x8C31;&#x7684;&#x53C2;&#x6570;&#x503C;&#x524D;&#x63D0;&#x4E0B;&#xFF0C;&#x7ECF;&#x8FC7;&#x82E5;&#x5E72;&#x8F6E;gradient decent&#xFF0C;&#x6700;&#x540E;&#x6210;&#x529F;&#x5F97;&#x5230;cost function &#x5C40;&#x90E8;&#x6781;&#x503C;&#x5BF9;&#x5E94;&#x7684;hypothesis&#x3002;</p>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/gd.gif" alt="linear regression&#x7684;gradient decent&#x7684;gif"></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linear-Regression/" rel="tag">#Linear Regression</a>
+          
+            <a href="/tags/ML/" rel="tag">#ML</a>
+          
+            <a href="/tags/Machine-Learning/" rel="tag">#Machine Learning</a>
+          
+            <a href="/tags/机器学习/" rel="tag">#机器学习</a>
+          
+            <a href="/tags/线性回归/" rel="tag">#线性回归</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Py-tricks-2-python中异常处理的陷阱/" rel="next" title="Py tricks(2): python中异常处理的陷阱">
+                <i class="fa fa-chevron-left"></i> Py tricks(2): python中异常处理的陷阱
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="机器学习入门（三）：线性回归-Linear-Regression/"
+           data-title="机器学习入门（三）：线性回归--Linear Regression" data-url="http://yoursite.com/机器学习入门（三）：线性回归-Linear-Regression/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="Peng Foo" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Peng Foo</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">full-stack就是实验室项目多的意思</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#linear-regression-in-one-sentence"><span class="nav-number">1.</span> <span class="nav-text">Linear Regression in one sentence</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#机器学习中的线性回归"><span class="nav-number">2.</span> <span class="nav-text">机器学习中的线性回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cost-functionloss-function"><span class="nav-number">3.</span> <span class="nav-text">Cost Function/Loss Function</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#线性回归的cost-function"><span class="nav-number">3.1.</span> <span class="nav-text">线性回归的cost function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对cost-function的解读"><span class="nav-number">3.2.</span> <span class="nav-text">对Cost Function的解读</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阶段总结"><span class="nav-number">4.</span> <span class="nav-text">阶段总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gradient-decent梯度下降"><span class="nav-number">5.</span> <span class="nav-text">Gradient Decent（梯度下降）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度下降的两个参数"><span class="nav-number">5.1.</span> <span class="nav-text">梯度下降的两个参数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#learning-rate的选取"><span class="nav-number">5.1.1.</span> <span class="nav-text">learning rate的选取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#终止条件"><span class="nav-number">5.1.2.</span> <span class="nav-text">终止条件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用梯度下降更新参数值"><span class="nav-number">5.2.</span> <span class="nav-text">使用梯度下降更新参数值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#batch-gradient-decent"><span class="nav-number">5.3.</span> <span class="nav-text">Batch Gradient Decent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linear-regression的梯度下降"><span class="nav-number">5.4.</span> <span class="nav-text">Linear Regression的梯度下降</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peng Foo</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"pengfoo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+s
+  
+  
+
+</body>
+</html>
