@@ -61,7 +61,7 @@
 
   {% block script_extra %}{% endblock %}
 
-  <script type="text/javascript" src="{{ url_for(theme.js) }}/bootstrap.js"></script>
+  <script type="text/javascript" src="http://7xn47m.com1.z0.glb.clouddn.com/bootstrap.js"></script>
 
   {% include '_scripts/tinysou.swig' %}
   {% include '_scripts/mathjax.swig' %}
