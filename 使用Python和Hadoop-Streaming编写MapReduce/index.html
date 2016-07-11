@@ -1,0 +1,838 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.css" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+    <link href='//fonts.useso.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+
+  <meta name="description" content="full-stack就是实验室项目多的意思" />
+
+
+
+
+  <meta name="keywords" content="H ,Hadoop,MapReduce ,Python,并行计算," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;lt;!-- toc --&amp;gt;
+
+Hadoop Streaming
+How it works
+Workflow
+&amp;#x5C40;&amp;#x9650;&amp;#x6027;
+
+
+&amp;#x4F7F;&amp;#x7528;Python&amp;#x7F16;&amp;#x5199;MapReduce
+Mapper
+Reducer
+&amp;#x8C03;&amp;#x8BD5;Mapper&amp;#x548C;Reducer
+
+
+&amp;#x53C2;&amp;#x6570;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Python和Hadoop Streaming编写MapReduce">
+<meta property="og:url" content="http://yoursite.com/使用Python和Hadoop-Streaming编写MapReduce/index.html">
+<meta property="og:site_name" content="Peng Foo">
+<meta property="og:description" content="&amp;lt;!-- toc --&amp;gt;
+
+Hadoop Streaming
+How it works
+Workflow
+&amp;#x5C40;&amp;#x9650;&amp;#x6027;
+
+
+&amp;#x4F7F;&amp;#x7528;Python&amp;#x7F16;&amp;#x5199;MapReduce
+Mapper
+Reducer
+&amp;#x8C03;&amp;#x8BD5;Mapper&amp;#x548C;Reducer
+
+
+&amp;#x53C2;&amp;#x6570;">
+<meta property="og:image" content="http://7xn47m.com1.z0.glb.clouddn.com/2016-07-11_17:00:24.jpg">
+<meta property="og:updated_time" content="2016-07-11T16:26:49.047Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Python和Hadoop Streaming编写MapReduce">
+<meta name="twitter:description" content="&amp;lt;!-- toc --&amp;gt;
+
+Hadoop Streaming
+How it works
+Workflow
+&amp;#x5C40;&amp;#x9650;&amp;#x6027;
+
+
+&amp;#x4F7F;&amp;#x7528;Python&amp;#x7F16;&amp;#x5199;MapReduce
+Mapper
+Reducer
+&amp;#x8C03;&amp;#x8BD5;Mapper&amp;#x548C;Reducer
+
+
+&amp;#x53C2;&amp;#x6570;">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?17af893a912c84b39a9016a54ed087f5";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+  <title> 使用Python和Hadoop Streaming编写MapReduce | Peng Foo </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?true";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Peng Foo</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用Python和Hadoop Streaming编写MapReduce
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-07-12T00:10:00+08:00" content="2016-07-12">
+              2016-07-12
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; 分类于
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/parallel-computing/" itemprop="url" rel="index">
+                    <span itemprop="name">parallel computing</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/使用Python和Hadoop-Streaming编写MapReduce/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="使用Python和Hadoop-Streaming编写MapReduce/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><!-- toc -->
+<ul>
+<li><a href="#hadoop-streaming">Hadoop Streaming</a><ul>
+<li><a href="#how-it-works">How it works</a></li>
+<li><a href="#workflow">Workflow</a></li>
+<li><a href="#&#x5C40;&#x9650;&#x6027;">&#x5C40;&#x9650;&#x6027;</a></li>
+</ul>
+</li>
+<li><a href="#&#x4F7F;&#x7528;python&#x7F16;&#x5199;mapreduce">&#x4F7F;&#x7528;Python&#x7F16;&#x5199;MapReduce</a><ul>
+<li><a href="#mapper">Mapper</a></li>
+<li><a href="#reducer">Reducer</a></li>
+<li><a href="#&#x8C03;&#x8BD5;mapper&#x548C;reducer">&#x8C03;&#x8BD5;Mapper&#x548C;Reducer</a></li>
+</ul>
+</li>
+<li><a href="#&#x53C2;&#x6570;">&#x53C2;&#x6570;</a><ul>
+<li><a href="#&#x547D;&#x4EE4;&#x884C;&#x53C2;&#x6570;">&#x547D;&#x4EE4;&#x884C;&#x53C2;&#x6570;</a></li>
+<li><a href="#&#x901A;&#x7528;&#x53C2;&#x6570;">&#x901A;&#x7528;&#x53C2;&#x6570;</a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+<hr>
+<p><img src="http://7xn47m.com1.z0.glb.clouddn.com/2016-07-11_17:00:24.jpg" alt="MapReduce"></p>
+<p>Hadoop &#x548C; MapReduce&#x5DF2;&#x7ECF;&#x5982;&#x65E5;&#x4E2D;&#x5929;&#x3002;Hadoop &#x4E0D;&#x4EC5;&#x53EF;&#x4EE5;&#x4F7F;&#x7528;Java&#x8FDB;&#x884C;MapReduce&#x7684;&#x7F16;&#x5199;&#xFF0C;&#x4E5F;&#x901A;&#x8FC7;Hadoop Streaming&#x7684;&#x65B9;&#x5F0F;&#x63D0;&#x4F9B;&#x4E86;&#x5176;&#x4ED6;&#x8BED;&#x8A00;&#x7F16;&#x5199;MR&#x7684;&#x63A5;&#x53E3;&#x3002;&#x66F4;&#x91CD;&#x8981;&#x7684;&#x662F;&#xFF0C;&#x4F7F;&#x7528;python&#x6765;&#x7F16;&#x5199;MR&#xFF0C;&#x6BD4;&#x4F7F;&#x7528;&#x4EB2;&#x513F;&#x5B50;Java&#x7F16;&#x5199;MR&#x8981;&#x66F4;&#x7B80;&#x5355;&#x548C;&#x65B9;&#x4FBF;&#x2026;&#x2026;&#x6240;&#x4EE5;&#x5728;&#x4E00;&#x4E9B;&#x4E0D;&#x975E;&#x5E38;&#x590D;&#x6742;&#x7684;&#x4EFB;&#x52A1;&#x4E2D;&#x4F7F;&#x7528;python&#x6765;&#x7F16;&#x5199;MR&#x6BD4;&#x8D77;&#x4F7F;&#x7528;Java&#xFF0C;&#x662F;&#x66F4;&#x52A0;&#x5212;&#x7B97;&#x7684;&#x3002;</p>
+<p>&#x4E0A;&#x56FE;&#x662F;MR&#x7684;workflow&#xFF0C;&#x5728;&#x4ECB;&#x7ECD;Hadoop Streaming&#x7684;&#x65F6;&#x5019;&#xFF0C;&#x53EF;&#x4EE5;&#x62FF;&#x6765;&#x505A;&#x53C2;&#x7167;&#x3002;</p>
+<h2 id="hadoop-streaming">Hadoop Streaming</h2><p>Hadoop Streaming&#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x4E2A;&#x4FBF;&#x4E8E;&#x8FDB;&#x884C;MapReduce&#x7F16;&#x7A0B;&#x7684;&#x5DE5;&#x5177;&#x5305;&#xFF0C;&#x4F7F;&#x7528;&#x5B83;&#x53EF;&#x4EE5;&#x57FA;&#x4E8E;&#x4E00;&#x4E9B;&#x53EF;&#x6267;&#x884C;&#x547D;&#x4EE4;&#x3001;&#x811A;&#x672C;&#x8BED;&#x8A00;&#x6216;&#x5176;&#x4ED6;&#x7F16;&#x7A0B;&#x8BED;&#x8A00;&#x6765;&#x5B9E;&#x73B0;Mapper&#x548C; Reducer&#xFF0C;&#x4ECE;&#x800C;&#x5145;&#x5206;&#x5229;&#x7528;Hadoop&#x5E76;&#x884C;&#x8BA1;&#x7B97;&#x6846;&#x67B6;&#x7684;&#x4F18;&#x52BF;&#x548C;&#x80FD;&#x529B;&#x3002;</p>
+<p>Hadoop Streaming&#x6BD4;&#x8F83;&#x72EC;&#x7279;&#x7684;&#x4E00;&#x70B9;&#x662F;&#x5229;&#x7528;&#x7684;UNIX&#x6807;&#x51C6;&#x8F93;&#x5165;&#x8F93;&#x51FA;<code>stdin&#x548C;stdout</code>&#xFF0C;&#x6240;&#x4EE5;&#x53EA;&#x8981;&#x80FD;&#x5904;&#x7406;stdin&#x548C;stdout&#x7684;&#x7F16;&#x7A0B;&#x8BED;&#x8A00;&#x90FD;&#x80FD;&#x591F;&#x4F7F;&#x7528;Hadoop Streaming&#x6765;&#x8FDB;&#x884C;MR&#x7684;&#x7F16;&#x5199;&#x3002;&#x751A;&#x81F3;&#xFF0C;wc&#x3001;awk&#x8FD9;&#x4E9B;linux&#x81EA;&#x5E26;&#x7684;&#x80FD;&#x5904;&#x7406;&#x6807;&#x51C6;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x7684;&#x7A0B;&#x5E8F;&#xFF0C;&#x4E5F;&#x80FD;&#x88AB;&#x7528;&#x6765;&#x7F16;&#x5199;Hadoop Streaming&#x3002;</p>
+<h3 id="how-it-works">How it works</h3><p>Hadoop Streaming &#x63D0;&#x4F9B;&#x4E86;&#x4E00;&#x4E2A;hadoop-streaming.jar&#xFF0C;&#x9ED8;&#x8BA4;&#x5904;&#x4E8E;<code>$HADOOP_HOME</code>&#x76EE;&#x5F55;&#x4E0B;&#x3002;&#x4F7F;&#x7528;Hadoop &#x6267;&#x884C;&#x8BE5;jar&#xFF0C;&#x4F20;&#x5165;MR job &#x7684;&#x53C2;&#x6570;&#x4EEC;&#x5F00;&#x59CB;MapReduce&#x3002;</p>
+<p>&#x4E00;&#x4E2A;&#x6700;&#x57FA;&#x672C;&#x7684;&#x4F7F;&#x7528;Hadoop Streaming&#x6765;&#x6267;&#x884C;MR&#x7684;&#x547D;&#x4EE4;&#x884C;&#x5982;&#x4E0B;&#xFF1A;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$HADOOP_HOME</span>/bin/hadoop  jar <span class="variable">$HADOOP_HOME</span>/hadoop-streaming.jar \</span><br><span class="line">    -input myInputDirs \</span><br><span class="line">    -output myOutputDir \</span><br><span class="line">    -mapper /path/to/your/mapper \</span><br><span class="line">    -reducer /path/to/your/reducer</span><br></pre></td></tr></table></figure>
+<p>&#x6307;&#x5B9A;&#x4E86;input&#x3001;output&#x3001;mapper&#x548C;reducer&#x56DB;&#x4E2A;&#x5FC5;&#x9009;&#x53C2;&#x6570;&#x3002;</p>
+<h3 id="workflow">Workflow</h3><p>Hadoop Streaming&#x7684;&#x5DE5;&#x4F5C;&#x6D41;&#x7A0B;&#x5927;&#x6982;&#x5982;&#x4E0B;&#xFF1A;</p>
+<ol>
+<li>hadoop-streaming.jar&#x5411;Hadoop&#x96C6;&#x7FA4;&#x6CE8;&#x518C;&#x4E00;&#x4E2A;&#x65B0;&#x7684;job&#xFF0C;&#x4F20;&#x5165;input path&#x548C;output path&#x7B49;</li>
+<li>&#x5F00;&#x59CB;mapper&#x65F6;&#xFF0C;Hadoop Streaming&#x4F1A;&#x5C06;&#x8F93;&#x5165;&#x6587;&#x4EF6;&#x6309;&#x884C;&#x4F20;&#x5165;stdin</li>
+<li><strong>&#x6211;&#x4EEC;&#x81EA;&#x5DF1;&#x7F16;&#x5199;&#x7684;mapper&#x9700;&#x8981;&#x8BFB;&#x53D6;stdin&#x6BCF;&#x4E00;&#x884C;&#xFF0C;&#x5BF9;&#x5176;&#x8FDB;&#x884C;&#x5904;&#x7406;</strong></li>
+<li><strong>mapper&#x5904;&#x7406;&#x5B8C;&#x6BD5;&#x7684;&#x4E2D;&#x95F4;&#x7ED3;&#x679C;&#x4E5F;&#x8981;&#x5199;&#x5165;stdout&#xFF0C;&#x5728;Python&#x4E2D;<code>print</code>&#x8BED;&#x53E5;&#x9ED8;&#x8BA4;&#x5373;&#x8F93;&#x51FA;&#x5230;stdout&#xFF0C;&#x5F53;&#x7136;&#x82E5;&#x662F;&#x4E0D;&#x653E;&#x5FC3;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x624B;&#x52A8;&#x6307;&#x5B9A;&#x8F93;&#x51FA;&#x6D41;&#x3002;&#x5BF9;&#x4E8E;&#x8F93;&#x51FA;&#x5230;stdout&#x4E2D;&#x7684;&#x6BCF;&#x4E00;&#x884C;&#xFF0C;hadoop&#x5C06;&#x9ED8;&#x8BA4;&#x4EE5;&#x2019;\t&#x2019;&#x4F5C;&#x4E3A;&#x5206;&#x9694;&#x7B26;&#x5207;&#x5272;&#x6210;k-v&#x7684;&#x683C;&#x5F0F;&#x3002;</strong></li>
+<li>mapper&#x5904;&#x7406;&#x7ED3;&#x675F;&#x540E;&#xFF0C;Hadoop &#x81EA;&#x52A8;&#x8FDB;&#x884C;partition&#x3001;sort&#x3001;group&#xFF0C;&#x51C6;&#x5907;&#x8FDB;&#x884C;reduce&#x4EFB;&#x52A1;</li>
+<li>Hadoop Streaming&#x5C06;&#x4E2D;&#x95F4;&#x7ED3;&#x679C;&#x6309;&#x884C;&#x4F20;&#x7ED9;reducer</li>
+<li><strong>&#x6211;&#x4EEC;&#x7F16;&#x5199;&#x7684;reducer&#x9700;&#x8981;&#x8BFB;&#x53D6;stdin&#x7684;&#x6BCF;&#x4E00;&#x884C;&#xFF0C;&#x5BF9;&#x5176;&#x8FDB;&#x884C;&#x5904;&#x7406;</strong></li>
+<li><strong>&#x5904;&#x7406;&#x7ED3;&#x675F;&#x4E4B;&#x540E;&#x4ECD;&#x7136;&#x8F93;&#x51FA;&#x5230;stdout&#x4E2D;</strong></li>
+<li>Hadoop &#x8F6C;&#x5B58;&#x5230;output path&#x4E2D;</li>
+<li>&#x7ED3;&#x675F;</li>
+</ol>
+<h3 id="&#x5C40;&#x9650;&#x6027;">&#x5C40;&#x9650;&#x6027;</h3><p>Hadoop Streaming &#x662F;&#x4E00;&#x4E2A;&#x975E;&#x5E38;&#x6613;&#x7528;&#x7684;MR&#x5DE5;&#x5177;&#xFF0C;&#x7136;&#x800C;&#x5BF9;&#x4E8E;MR&#x7684;&#x5F88;&#x591A;&#x7EC6;&#x8282;&#xFF0C;&#x6211;&#x4EEC;&#x5E76;&#x4E0D;&#x80FD;&#x968F;&#x5FC3;&#x6240;&#x6B32;&#x7684;&#x638C;&#x63A7;&#xFF0C;&#x6BD4;&#x5982;Hadoop Streaming&#x867D;&#x7136;&#x63D0;&#x4F9B;&#x4E86;&#x81EA;&#x5B9A;&#x4E49;Partitioner&#x7684;&#x53C2;&#x6570;&#xFF0C;&#x4F46;&#x662F;&#x8FD9;&#x4E2A;&#x53C2;&#x6570;&#x4EC5;&#x9650;&#x4E8E;&#x63D0;&#x4F9B;Java Class&#x2014;-&#x6240;&#x4EE5;&#x5982;&#x679C;&#x9700;&#x8981;&#x81EA;&#x5B9A;&#x4E49;Partitioner&#xFF0C;&#x8FD8;&#x4E0D;&#x5982;&#x76F4;&#x63A5;&#x7528;Java&#x6765;&#x5199;MR&#x3002;</p>
+<p>&#x6B64;&#x5916;&#xFF0C;&#x56E0;&#x4E3A;&#x589E;&#x52A0;&#x4E86;&#x6807;&#x51C6;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x6D41;&#x4E2D;&#x7684;&#x6D41;&#x8F6C;&#x5904;&#x7406;&#x65F6;&#x95F4;&#xFF0C;&#x6240;&#x4EE5;&#x5728;&#x6267;&#x884C;&#x901F;&#x5EA6;&#x4E0A;&#xFF0C;Hadoop Streaming&#x5B9E;&#x9645;&#x4E0A;&#x6BD4;&#x539F;&#x751F;&#x7684;Hadoop&#x662F;&#x8981;&#x6162;&#x4E00;&#x70B9;&#x7684;&#x3002;</p>
+<p>&#x6240;&#x4EE5;Hadoop Streaming &#x9002;&#x5408;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x7EDF;&#x8BA1;&#x7B49;&#x7B80;&#x5355;&#x7684;&#x7EAF;&#x7CB9;&#x7684;MR job&#x3002;</p>
+<h2 id="&#x4F7F;&#x7528;python&#x7F16;&#x5199;mapreduce">&#x4F7F;&#x7528;Python&#x7F16;&#x5199;MapReduce</h2><p>&#x4F7F;&#x7528;Python&#x6765;&#x7F16;&#x5199;MapReduce&#xFF0C;&#x5C31;&#x9700;&#x8981;&#x7F16;&#x5199;&#x4E00;&#x4E2A;mapper&#xFF0C;&#x4E00;&#x4E2A;reducer&#xFF0C;&#x628A;&#x4ED6;&#x4EEC;&#x653E;&#x5165;&#x76F8;&#x5E94;&#x53C2;&#x6570;&#x4E2D;&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x4EE5;word count&#x4E3A;&#x4F8B;&#x7F16;&#x5199;Hadoop Streaming&#x7684;MapReduce</p>
+<h3 id="mapper">Mapper</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">	    words = line.strip().split()</span><br><span class="line">	    <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">	        value = <span class="number">1</span></span><br><span class="line">	        <span class="keyword">print</span> <span class="string">&quot;%s\t%d&quot;</span> % (word, value)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&apos;__main__&apos;</span>:</span><br><span class="line">    map()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>python&#x7684;stdin&#x4F4D;&#x4E8E;sys.stdin</li>
+<li>&#x4ECE;stdin&#x4E2D;&#x8BFB;&#x5165;&#x4E00;&#x884C;&#xFF0C;&#x7136;&#x540E;&#x8FDB;&#x884C;&#x76F8;&#x5E94;&#x5904;&#x7406;</li>
+<li>&#x5199;&#x5165;stdout&#x4E2D;&#xFF0C;key&#x548C;value&#x4EE5;&#x2018;\t&#x2019;&#x9694;&#x5F00;</li>
+</ul>
+<h3 id="reducer">Reducer</h3><p>&#x5728;Hadoop &#x5185;&#x90E8;&#xFF0C;&#x7ECF;&#x8FC7;&#x4E86;mapper&#x3001;partitioner&#x548C;sorter&#x4E4B;&#x540E;&#xFF0C;&#x4F20;&#x7ED9;reducer&#x7684;&#x683C;&#x5F0F;&#x548C;&#x7528;Java&#x5199;&#x4E0D;&#x540C;&#xFF0C;&#x4F20;&#x7EDF;&#x65B9;&#x5F0F;&#x5230;&#x8FBE;reduce&#x8FD9;&#x4E00;&#x6B65;&#x9AA4;&#x7684;&#x65F6;&#x5019;&#x4F1A;&#x81EA;&#x52A8;&#x5C06;&#x540C;&#x6837;&#x7684;key&#x5408;&#x5E76;&#xFF0C;value&#x662F;&#x4E00;&#x4E2A;iterator&#xFF0C;&#x4F46;&#x662F;&#x5728;Hadoop Streaming&#x4E0D;&#x4F1A;&#x8FD9;&#x6837;&#xFF0C;&#x5230;&#x8FBE;reducer&#x7684;&#x683C;&#x5F0F;&#x4ECD;&#x7136;&#x662F;key-value&#x7684;&#x683C;&#x5F0F;&#x3002;</p>
+<p>&#x56E0;&#x6B64;&#x9700;&#x8981;&#x6211;&#x4EEC;&#x81EA;&#x5DF1;&#x8FDB;&#x884C;&#x76F8;&#x540C;key&#x7684;&#x5408;&#x5E76;&#x64CD;&#x4F5C;&#x3002;&#x5728;python&#x7684;itertools&#x6709;groupby&#xFF0C;&#x63D0;&#x4F9B;&#x4E86;&#x7C7B;&#x4F3C;&#x7684;&#x529F;&#x80FD;.</p>
+<blockquote>
+<p>groupby&#x529F;&#x80FD;&#x7684;&#x8BF4;&#x660E;&#xFF0C;&#x89C1; <a href="https://docs.python.org/2.7/library/itertools.html#itertools.groupby" target="_blank" rel="external">https://docs.python.org/2.7/library/itertools.html#itertools.groupby</a></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> groupby</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fromstdin</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> sys.stdin:</span><br><span class="line">        word, count = line.rstrip(<span class="string">&apos;\n&apos;</span>).split(<span class="string">&apos;\t&apos;</span>)</span><br><span class="line">        <span class="keyword">yield</span> (word, count)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reduce</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> word, group <span class="keyword">in</span> groupby(self.fromstdin(), key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>]):</span><br><span class="line">        count = sum([<span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> group])</span><br><span class="line">        <span class="keyword">print</span> <span class="string">&apos;%s\t%s&apos;</span> % (word, str(count))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&apos;__main__&apos;</span>:</span><br><span class="line">    reduce()</span><br></pre></td></tr></table></figure>
+<h3 id="&#x8C03;&#x8BD5;mapper&#x548C;reducer">&#x8C03;&#x8BD5;Mapper&#x548C;Reducer</h3><p>Hadoop Streaming &#x9009;&#x62E9;stdin&#x548C;stdout&#x4F5C;&#x4E3A;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x6D41;&#x7ED9;&#x6211;&#x4EEC;&#x7684;&#x8C03;&#x8BD5;&#x5E26;&#x6765;&#x4E86;&#x6781;&#x5927;&#x7684;&#x65B9;&#x4FBF;&#xFF0C;&#x6211;&#x4EEC;&#x53EA;&#x9700;&#x8981;&#x8BA9;&#x81EA;&#x5DF1;&#x7684;&#x6D4B;&#x8BD5;&#x8F93;&#x5165;&#x548C;&#x8F93;&#x51FA;&#x5728;&#x6807;&#x51C6;&#x8F93;&#x51FA;&#x6D41;&#x91CC;&#x9762;&#x5C31;&#x53EF;&#x4EE5;&#x8BA9;mapper&#x548C;reducer&#x8DD1;&#x8D77;&#x6765;&#xFF0C;&#x800C;&#x4E0D;&#x4F9D;&#x8D56;Hadoop &#x548C; HDFS&#x3002;</p>
+<p>&#x6211;&#x4EEC;&#x5229;&#x7528;&#x7BA1;&#x9053;&#x547D;&#x4EE4;&#x7B26;&#x53F7;<code>|</code>&#x6765;&#x7EC4;&#x6210;pipeline&#xFF0C;&#x5728;bash&#x4E2D;&#x5C31;&#x80FD;&#x591F;&#x5B8C;&#x6210;&#x8C03;&#x8BD5;&#x3002;&#x547D;&#x4EE4;&#x5982;&#x4E0B;&#xFF1A;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat input.txt | ./mapper.py | sort | ./reducer.py &gt; output.txt</span><br></pre></td></tr></table></figure>
+<p>&#x6211;&#x4EEC;&#x4F7F;&#x7528;cat&#x4F5C;&#x4E3A;read input&#x5230;&#x6807;&#x51C6;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x6D41;&#x7684;&#x5DE5;&#x5177;&#xFF0C;&#x7136;&#x540E;&#x7ECF;&#x8FC7;mapper&#xFF0C;sorter&#xFF0C;reducer&#x6700;&#x540E;&#x8F93;&#x51FA;&#x5230;output.txt&#x6587;&#x4EF6;&#x4E2D;&#x3002;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x67E5;&#x770B;output.txt&#x7684;&#x5185;&#x5BB9;&#x5224;&#x65AD;&#x662F;&#x5426;&#x6B63;&#x786E;&#x5904;&#x7406;&#x3002;</p>
+<blockquote>
+<p><strong>&#x6CE8;&#x610F;&#xFF1A;&#x5728;&#x8FD9;&#x79CD;&#x65B9;&#x5F0F;&#x8FDB;&#x884C;&#x8C03;&#x8BD5;&#x4E0D;&#x80FD;&#x4F7F;&#x7528;print&#x5927;&#x6CD5;&#x6765;&#x6253;&#x51FA;&#x8FDB;&#x7A0B;&#x4FE1;&#x606F;&#xFF0C;&#x56E0;&#x4E3A;&#x4F60;&#x7684;&#x8F93;&#x5165;&#x8F93;&#x51FA;&#x5DF2;&#x7ECF;&#x8FDB;&#x5165;&#x7BA1;&#x9053;&#xFF0C;&#x4E0D;&#x80FD;&#x663E;&#x793A;&#x5728;&#x5C4F;&#x5E55;&#x4E0A;&#xFF0C;&#x5EFA;&#x8BAE;&#x4F7F;&#x7528;logging &#x6A21;&#x5757;&#x7B49;&#x65B9;&#x5F0F;&#x6765;&#x6253;&#x65E5;&#x5FD7;</strong></p>
+</blockquote>
+<h2 id="&#x53C2;&#x6570;">&#x53C2;&#x6570;</h2><h3 id="&#x547D;&#x4EE4;&#x884C;&#x53C2;&#x6570;">&#x547D;&#x4EE4;&#x884C;&#x53C2;&#x6570;</h3><p>Hadoop Streaming&#x4E5F;&#x63D0;&#x4F9B;&#x4E86;&#x5F88;&#x591A;&#x5176;&#x4ED6;&#x53C2;&#x6570;&#x3002;</p>
+<table><tbody><tr><th colspan="1" rowspan="1">Parameter</th><th colspan="1" rowspan="1">Optional/Required </th><th colspan="1" rowspan="1">Description </th></tr><tr><td colspan="1" rowspan="1"> -input directoryname or filename</td><td colspan="1" rowspan="1"> Required </td><td colspan="1" rowspan="1"> Input location for mapper</td></tr><tr><td colspan="1" rowspan="1"> -output directoryname </td><td colspan="1" rowspan="1"> Required </td><td colspan="1" rowspan="1"> Output location for reducer</td></tr><tr><td colspan="1" rowspan="1"> -mapper executable or JavaClassName </td><td colspan="1" rowspan="1"> Required </td><td colspan="1" rowspan="1"> Mapper executable</td></tr><tr><td colspan="1" rowspan="1"> -reducer executable or JavaClassName</td><td colspan="1" rowspan="1"> Required </td><td colspan="1" rowspan="1"> Reducer executable</td></tr><tr><td colspan="1" rowspan="1"> -file filename</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Make the mapper, reducer, or combiner executable available locally on the compute nodes</td></tr><tr><td colspan="1" rowspan="1"> -inputformat JavaClassName</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Class you supply should return key/value pairs of Text class. If not specified, TextInputFormat is used as the default</td></tr><tr><td colspan="1" rowspan="1"> -outputformat JavaClassName</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Class you supply should take key/value pairs of Text class. If not specified, TextOutputformat is used as the default</td></tr><tr><td colspan="1" rowspan="1"> -partitioner JavaClassName</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Class that determines which reduce a key is sent to</td></tr><tr><td colspan="1" rowspan="1"> -combiner streamingCommand or JavaClassName</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Combiner executable for map output</td></tr><tr><td colspan="1" rowspan="1"> -cmdenv name=value</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Pass environment variable to streaming commands</td></tr><tr><td colspan="1" rowspan="1"> -inputreader</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> For backwards-compatibility: specifies a record reader class (instead of an input format class)</td></tr><tr><td colspan="1" rowspan="1"> -verbose</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Verbose output</td></tr><tr><td colspan="1" rowspan="1"> -lazyOutput</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Create output lazily. For example, if the output format is based on FileOutputFormat, the output file is created only on the first call to output.collect (or Context.write)</td></tr><tr><td colspan="1" rowspan="1"> -numReduceTasks</td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Specify the number of reducers</td></tr><tr><td colspan="1" rowspan="1"> -mapdebug </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Script to call when map task fails </td></tr><tr><td colspan="1" rowspan="1"> -reducedebug </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Script to call when reduce task fails </td></tr></tbody></table>
+
+<h3 id="&#x901A;&#x7528;&#x53C2;&#x6570;">&#x901A;&#x7528;&#x53C2;&#x6570;</h3><p>&#x503C;&#x5F97;&#x6CE8;&#x610F;&#x7684;&#x662F;&#xFF0C;Hadoop Streaming &#x63D0;&#x4F9B;&#x4E86;&#x901A;&#x7528;&#x53C2;&#x6570;&#xFF0C;&#x4F7F;&#x5F97;&#x4E00;&#x4E9B;&#x4E0D;&#x5C5E;&#x4E8E;mapper&#x6216;&#x8005;reducer&#x7684;&#x53C2;&#x6570;&#x53EF;&#x4EE5;&#x88AB;&#x6307;&#x5B9A;&#x3002;</p>
+<p>&#x5176;&#x4E2D;&#x4F7F;&#x7528;&#x6700;&#x591A;&#x7684;&#x53C2;&#x6570;&#x662F;<code>-D</code>&#xFF0C; &#x8FD9;&#x4E2A;&#x53C2;&#x6570;&#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x81EA;&#x5B9A;&#x4E49;&#x7684;kv&#xFF0C;&#x6781;&#x5927;&#x5730;&#x63D0;&#x9AD8;&#x4E86;&#x81EA;&#x7531;&#x5EA6;&#x3002;</p>
+<p>&#x5982;&#xFF1A;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$HADOOP_HOME</span>/bin/hadoop  jar <span class="variable">$HADOOP_HOME</span>/hadoop-streaming.jar \</span><br><span class="line">    -D map.output.key.field.separa=. \</span><br><span class="line">    -D mapred.text.key.partitioner.options=-k1,<span class="number">2</span> \</span><br><span class="line">    -D mapred.data.field.separator=. \</span><br><span class="line">    -D map.output.key.value.fields.spec=<span class="number">6</span>,<span class="number">5</span>,<span class="number">1</span>-<span class="number">3</span>:<span class="number">0</span>- \</span><br><span class="line">    -D reduce.output.key.value.fields.spec=<span class="number">0</span>-<span class="number">2</span>:<span class="number">5</span>- \</span><br><span class="line">    -D mapred.reduce.tasks=<span class="number">12</span> \</span><br><span class="line">    -input myInputDirs \</span><br><span class="line">    -output myOutputDir \</span><br><span class="line">    -mapper org.apache.hadoop.mapred.lib.FieldSelectionMapReduce \</span><br><span class="line">    -reducer org.apache.hadoop.mapred.lib.FieldSelectionMapReduce \</span><br><span class="line">    -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner w</span><br></pre></td></tr></table></figure>
+<table><tbody><tr><th colspan="1" rowspan="1">Parameter</th><th colspan="1" rowspan="1">Optional/Required </th><th colspan="1" rowspan="1">Description </th></tr><tr><td colspan="1" rowspan="1"> -conf  configuration_file </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Specify an application configuration file </td></tr><tr><td colspan="1" rowspan="1"> -D  property=value </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Use value for given property </td></tr><tr><td colspan="1" rowspan="1"> -fs host:port or local </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Specify a namenode </td></tr><tr><td colspan="1" rowspan="1"> -jt host:port or local </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Specify a job tracker </td></tr><tr><td colspan="1" rowspan="1"> -files </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Specify comma-separated files to be copied to the Map/Reduce cluster </td></tr><tr><td colspan="1" rowspan="1"> -libjars  </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Specify comma-separated jar files to include in the classpath </td></tr><tr><td colspan="1" rowspan="1"> -archives </td><td colspan="1" rowspan="1"> Optional </td><td colspan="1" rowspan="1"> Specify comma-separated archives to be unarchived on the compute machines</td></tr></tbody></table></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/H/" rel="tag">#H </a>
+          
+            <a href="/tags/Hadoop/" rel="tag">#Hadoop</a>
+          
+            <a href="/tags/MapReduce/" rel="tag">#MapReduce </a>
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+            <a href="/tags/并行计算/" rel="tag">#并行计算</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Logistic-Regression-Essential/" rel="next" title="Logistic Regression 本质论">
+                <i class="fa fa-chevron-left"></i> Logistic Regression 本质论
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="使用Python和Hadoop-Streaming编写MapReduce/"
+           data-title="使用Python和Hadoop Streaming编写MapReduce" data-url="http://yoursite.com/使用Python和Hadoop-Streaming编写MapReduce/">
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="Peng Foo" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Peng Foo</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">full-stack就是实验室项目多的意思</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hadoop-streaming"><span class="nav-number">1.</span> <span class="nav-text">Hadoop Streaming</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#how-it-works"><span class="nav-number">1.1.</span> <span class="nav-text">How it works</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#workflow"><span class="nav-number">1.2.</span> <span class="nav-text">Workflow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#局限性"><span class="nav-number">1.3.</span> <span class="nav-text">局限性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用python编写mapreduce"><span class="nav-number">2.</span> <span class="nav-text">使用Python编写MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mapper"><span class="nav-number">2.1.</span> <span class="nav-text">Mapper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reducer"><span class="nav-number">2.2.</span> <span class="nav-text">Reducer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试mapper和reducer"><span class="nav-number">2.3.</span> <span class="nav-text">调试Mapper和Reducer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数"><span class="nav-number">3.</span> <span class="nav-text">参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#命令行参数"><span class="nav-number">3.1.</span> <span class="nav-text">命令行参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通用参数"><span class="nav-number">3.2.</span> <span class="nav-text">通用参数</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Peng Foo</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  
+
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"pengfoo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+
+
+    
+  
+
+  
+  <script type="text/javascript" src="http://apps.bdimg.com/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="http://7xn47m.com1.z0.glb.clouddn.com/fancy-box.js"></script>
+
+
+  <script type="text/javascript" src="http://7xn47m.com1.z0.glb.clouddn.com/helpers.js"></script>
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.2/velocity.min.js"></script>
+<script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.2/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="http://7xn47m.com1.z0.glb.clouddn.com/motion.js" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+  <!--<script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>-->
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="http://7xn47m.com1.z0.glb.clouddn.com/bootstrap.js"></script>
+
+  
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+
+  
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+s
+  
+  
+
+</body>
+</html>
